@@ -17,6 +17,8 @@ tempo_inicial = time.time()
 
 
 #le a tabela (MODIFICAR A ENTRADA)
+#Aqui terei que modificar a entrada.
+#@TODO Modificar esse trabalho como um todo, fazer em formato de funções inicialmente
 tabela= pd.read_csv('/home/matheus_mai/Desktop/dbNSFP4.2a/chr_21.csv', sep= ",")
 genes= tabela['genename']
 
