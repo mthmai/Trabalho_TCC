@@ -3,8 +3,6 @@ from sklearn.metrics import cohen_kappa_score
 from typing import List
 
 
-
-
 def drop_colums(lista_columns: List[str], table: pd.DataFrame) -> pd.DataFrame:
     
     return table.drop(columns= list_columns)
@@ -14,6 +12,36 @@ def true_positive(table: pd.DataFrame, column_name: str, idx_int: int) -> int:
     search_TP = (table[(table[column_name] == 1) & (table[idx_int] == 1)])
 
     return len(search_TP.index)
+
+def false_negative(table: pd.DataFrame, column_name: str, idx_int: int) -> int:
+
+    search_FN = (table[(table[column_name] == 1) & (table[idx_int] == 0)])
+
+    return len(search_FN.index)
+
+def pat_no_class(table: pd.DataFrame, column_name: str, idx_int: int) -> int:
+
+    search_pat_no_class = (table[(table[column_name] == 1) & (table[idx_int] == 10000)])
+
+    return len(search_pat_no_class.index)
+
+def false_positive(table: pd.DataFrame, column_name: str, idx_int: int) -> int:
+
+    search_FP = (table[(table[column_name] == 0) & (table[idx_int] == 1)])
+
+    return len(search_FP.index)
+
+def true_negative(table: pd.DataFrame, column_name: str, idx_int: int) -> int:
+
+    search_TN = (table[(table[column_name] == 0) & (table[idx_int] == 0)])
+
+    return len(search_TN.index)
+
+def ben_no_class(table: pd.DataFrame, column_name: str, idx_int: int) -> int:
+
+    search_ben_no_class = (table[(table[column_name] == 0) & (table[idx_int] == 10000)])
+
+    return len(search_ben_no_class.index)
 
 def kappa_calculation(table: pd.DataFrame) -> List[int]:
     
@@ -54,19 +82,17 @@ def true_positive():
 
 if __name__ == '__main__':
     
-    table = pd.read_csv('/home/matheus_mai/Desktop/teste_execute_statistics.csv')
+    table_drop = pd.read_csv('/home/ubuntu/Área de Trabalho/table_teste_TCC.csv')
     #kappa_calculation(table)
     list_columns = ['HUVEC_confidence_value','H1-hESC_confidence_value','GM12878_confidence_value','integrated_confidence_value', '1000Gp3_AF','1000Gp3_AFR_AF', '1000Gp3_EUR_AF', '1000Gp3_AMR_AF', '1000Gp3_EAS_AF','1000Gp3_SAS_AF', 'gnomAD_exomes_flag', 'gnomAD_exomes_AF','gnomAD_exomes_AFR_AF', 
                     'gnomAD_exomes_AMR_AF', 'gnomAD_exomes_ASJ_AF','gnomAD_exomes_EAS_AF', 'gnomAD_exomes_FIN_AF', 'gnomAD_exomes_NFE_AF','gnomAD_exomes_SAS_AF', 'clinvar_id', 'clinvar_trait', 'clinvar_var_source']
     
+    dictionary_calcs = {'TP': [], 'FN': [], 'FP': [], 'TN': []}
+    #table_drop = drop_colums(list_columns, table)
+    for i in table_drop.columns[14:55]:
+        dictionary_calcs['TP'].append(true_positive(table_drop, 'clinvar_clnsig', i))
+        dictionary_calcs['FN'].append(false_negative(table_drop, 'clinvar_clnsig', i))
+        dictionary_calcs['FP'].append(false_positive(table_drop, 'clinvar_clnsig', i))
+        dictionary_calcs['TN'].append(true_negative(table_drop, 'clinvar_clnsig', i))
+    print(dictionary_calcs)
     
-    #for i, row in table.iterrows():
-        #print(row)
-    
-    table_drop = drop_colums(list_columns, table)
-    for idx in table_drop.columns[14:52]:
-        search_TP = (table_drop[(table_drop['clinvar_clnsig'] == 1) & (table_drop[idx] == 1)])
-        search_PAT_nao_class = (table_drop[(table_drop['clinvar_clnsig'] == 1) & (table_drop[idx] == 10000)])
-
-        print(len(search_PAT_nao_class.index))
-        #print(table_drop[idx])
