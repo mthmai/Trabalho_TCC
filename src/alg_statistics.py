@@ -137,13 +137,25 @@ if __name__ == '__main__':
         dictionary_calcs['FN'].append(false_negative(table_drop, 'clinvar_clnsig', i))
         dictionary_calcs['FP'].append(false_positive(table_drop, 'clinvar_clnsig', i))
         dictionary_calcs['TN'].append(true_negative(table_drop, 'clinvar_clnsig', i))
-    print(dictionary_calcs)
+    #print(dictionary_calcs)
     
 
     list_TP = get_list_TP(dictionary_calcs)
     list_FN = get_list_FN(dictionary_calcs)
     list_FP = get_list_FP(dictionary_calcs)
     list_TN = get_list_TN(dictionary_calcs)
+    programs_name = table_drop.columns[14:55]
 
+    dictionary_statistics = {'programs': [], 'sensibility': [], 'especificity': [], 'acuracy': [], 'kappa_value': []}
     for idx in range(len(list_TP)):
-
+        dictionary_statistics['sensibility'].append(calc_sensibility(list_TP[idx], list_FN[idx]))
+        dictionary_statistics['especificity'].append(calc_especificity(list_TN[idx], list_FP[idx]))
+        dictionary_statistics['acuracy'].append(calc_acuracy(list_TP[idx], list_TN[idx], list_FN[idx], list_FP[idx]))
+        dictionary_statistics['programs'].append(programs_name[idx])
+    #print('Sensibilidade: ', dictionary_statistics['sensibility'])
+    #print('Especificidade: ', dictionary_statistics['especificity'])
+    #print('Acuracia: ', dictionary_statistics['acuracy'])
+    df = pd.DataFrame.from_dict(dictionary_statistics, orient='index').transpose()
+    print(df)
+    
+        
