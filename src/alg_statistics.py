@@ -1,6 +1,6 @@
 import pandas as pd
 from sklearn.metrics import cohen_kappa_score
-from typing import List
+from typing import List, Dict
 
 
 def drop_colums(lista_columns: List[str], table: pd.DataFrame) -> pd.DataFrame:
@@ -43,6 +43,48 @@ def ben_no_class(table: pd.DataFrame, column_name: str, idx_int: int) -> int:
 
     return len(search_ben_no_class.index)
 
+# sensibilidade
+# TP/(TP+FN)
+def calc_sensibility(value_tp: int, value_fn: int) -> int:
+    try:
+        return value_tp / (value_tp + value_fn)
+    except ZeroDivisionError:
+        return None
+
+# especificidade
+# TN/(TN+FP)
+def calc_especificity(value_tn: int, value_fp: int) -> int:
+    try:
+        return value_tn / (value_tn + value_fp)
+    except ZeroDivisionError:
+        return None
+
+# acurácia
+# (TP+TN)/(TP+TN+FN+FP)
+def calc_acuracy(value_tp: int, value_tn: int, value_fn: int, value_fp: int) -> int:
+    try:
+        return (value_tp + value_tn) / (value_tp + value_tn + value_fn + value_fp)
+    except ZeroDivisionError:
+        return None
+
+
+def get_list_TP(dictionary_calc: Dict[str, int]) -> List[int]:
+
+    return dictionary_calc.get('TP')
+
+def get_list_TN(dictionary_calc: Dict[str, int]) -> List[int]:
+
+    return dictionary_calc.get('TN')
+
+def get_list_FP(dictionary_calc: Dict[str, int]) -> List[int]:
+
+    return dictionary_calc.get('FP')
+
+def get_list_FN(dictionary_calc: Dict[str, int]) -> List[int]:
+
+    return dictionary_calc.get('FN')
+
+# teste de kappa
 def kappa_calculation(table: pd.DataFrame) -> List[int]:
     
     kappa_list = list()
@@ -58,6 +100,7 @@ def kappa_calculation(table: pd.DataFrame) -> List[int]:
         print(clinvar_corte)
         kappa_list = cohen_kappa_score(cortado, clinvar_corte)
         kappa_list.append((kappa_list))
+
 
 
 
@@ -96,3 +139,11 @@ if __name__ == '__main__':
         dictionary_calcs['TN'].append(true_negative(table_drop, 'clinvar_clnsig', i))
     print(dictionary_calcs)
     
+
+    list_TP = get_list_TP(dictionary_calcs)
+    list_FN = get_list_FN(dictionary_calcs)
+    list_FP = get_list_FP(dictionary_calcs)
+    list_TN = get_list_TN(dictionary_calcs)
+
+    for idx in range(len(list_TP)):
+
