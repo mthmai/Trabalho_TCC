@@ -84,6 +84,23 @@ def get_list_FN(dictionary_calc: Dict[str, int]) -> List[int]:
 
     return dictionary_calc.get('FN')
 
+def teste_kappa(program_column: pd.core.series.Series, standard_column: pd.core.series.Series):
+    
+    col_1 = program_column.tolist()
+    col_2 = standard_column.tolist()
+
+    return cohen_kappa_score(col_1, col_2)
+
+def kappa_to_apply(table: pd.DataFrame, standard_column: str ,dictionary: Dict) -> Dict:
+
+    table_cut = table.drop(table[table[standard_column] == 10000].index)
+    for idx in table.columns[14:55]:
+        cut_df = table_cut.loc[:,[idx, standard_column]]
+        drop_df = cut_df.drop(cut_df[cut_df[idx] == 10000].index)
+        
+        dictionary['kappa_value'].append(teste_kappa(drop_df[idx], drop_df[standard_column]))    
+        
+    return dictionary
 # teste de kappa
 def kappa_calculation(table: pd.DataFrame) -> List[int]:
     
@@ -131,6 +148,7 @@ if __name__ == '__main__':
                     'gnomAD_exomes_AMR_AF', 'gnomAD_exomes_ASJ_AF','gnomAD_exomes_EAS_AF', 'gnomAD_exomes_FIN_AF', 'gnomAD_exomes_NFE_AF','gnomAD_exomes_SAS_AF', 'clinvar_id', 'clinvar_trait', 'clinvar_var_source']
     
     dictionary_calcs = {'TP': [], 'FN': [], 'FP': [], 'TN': []}
+    #print(type(table_drop['clinvar_clnsig']))
     #table_drop = drop_colums(list_columns, table)
     for i in table_drop.columns[14:55]:
         dictionary_calcs['TP'].append(true_positive(table_drop, 'clinvar_clnsig', i))
@@ -155,7 +173,8 @@ if __name__ == '__main__':
     #print('Sensibilidade: ', dictionary_statistics['sensibility'])
     #print('Especificidade: ', dictionary_statistics['especificity'])
     #print('Acuracia: ', dictionary_statistics['acuracy'])
+    dictionary_statistics = kappa_to_apply(table_drop, 'clinvar_clnsig', dictionary_statistics)
+    print(dictionary_statistics['kappa_value'])
     df = pd.DataFrame.from_dict(dictionary_statistics, orient='index').transpose()
     print(df)
-    
         
