@@ -3,7 +3,7 @@ from sklearn.metrics import cohen_kappa_score
 from typing import List, Dict
 
 
-def drop_colums(lista_columns: List[str], table: pd.DataFrame) -> pd.DataFrame:
+def drop_colums(list_columns: List[str], table: pd.DataFrame) -> pd.DataFrame:
     
     return table.drop(columns= list_columns)
 
@@ -85,19 +85,17 @@ def get_list_FN(dictionary_calc: Dict[str, int]) -> List[int]:
     return dictionary_calc.get('FN')
 
 def teste_kappa(program_column: pd.core.series.Series, standard_column: pd.core.series.Series):
-    
     col_1 = program_column.tolist()
     col_2 = standard_column.tolist()
-
+    
     return cohen_kappa_score(col_1, col_2)
 
 def kappa_to_apply(table: pd.DataFrame, standard_column: str ,dictionary: Dict) -> Dict:
 
     table_cut = table.drop(table[table[standard_column] == 10000].index)
-    for idx in table.columns[14:55]:
+    for idx in table.columns[14:51]:
         cut_df = table_cut.loc[:,[idx, standard_column]]
         drop_df = cut_df.drop(cut_df[cut_df[idx] == 10000].index)
-        
         dictionary['kappa_value'].append(teste_kappa(drop_df[idx], drop_df[standard_column]))    
         
     return dictionary
@@ -142,15 +140,17 @@ def true_positive():
 
 if __name__ == '__main__':
     
-    table_drop = pd.read_csv('/home/ubuntu/Área de Trabalho/table_teste_TCC.csv')
+    table = pd.read_csv('/home/ubuntu/Área de Trabalho/table_teste_TCC.csv')
     #kappa_calculation(table)
-    list_columns = ['HUVEC_confidence_value','H1-hESC_confidence_value','GM12878_confidence_value','integrated_confidence_value', '1000Gp3_AF','1000Gp3_AFR_AF', '1000Gp3_EUR_AF', '1000Gp3_AMR_AF', '1000Gp3_EAS_AF','1000Gp3_SAS_AF', 'gnomAD_exomes_flag', 'gnomAD_exomes_AF','gnomAD_exomes_AFR_AF', 
-                    'gnomAD_exomes_AMR_AF', 'gnomAD_exomes_ASJ_AF','gnomAD_exomes_EAS_AF', 'gnomAD_exomes_FIN_AF', 'gnomAD_exomes_NFE_AF','gnomAD_exomes_SAS_AF', 'clinvar_id', 'clinvar_trait', 'clinvar_var_source']
+    #list_columns = ['HUVEC_confidence_value','H1-hESC_confidence_value','GM12878_confidence_value','integrated_confidence_value', '1000Gp3_AF','1000Gp3_AFR_AF', '1000Gp3_EUR_AF', '1000Gp3_AMR_AF', '1000Gp3_EAS_AF','1000Gp3_SAS_AF', 'gnomAD_exomes_flag', 'gnomAD_exomes_AF','gnomAD_exomes_AFR_AF', 
+    #                'gnomAD_exomes_AMR_AF', 'gnomAD_exomes_ASJ_AF','gnomAD_exomes_EAS_AF', 'gnomAD_exomes_FIN_AF', 'gnomAD_exomes_NFE_AF','gnomAD_exomes_SAS_AF', 'clinvar_id', 'clinvar_trait', 'clinvar_var_source']
     
+    list_columns = ['HUVEC_confidence_value','H1-hESC_confidence_value','GM12878_confidence_value',
+                    'integrated_confidence_value', 'clinvar_id', 'clinvar_source']
     dictionary_calcs = {'TP': [], 'FN': [], 'FP': [], 'TN': []}
     #print(type(table_drop['clinvar_clnsig']))
-    #table_drop = drop_colums(list_columns, table)
-    for i in table_drop.columns[14:55]:
+    table_drop = drop_colums(list_columns, table)
+    for i in table_drop.columns[14:51]:
         dictionary_calcs['TP'].append(true_positive(table_drop, 'clinvar_clnsig', i))
         dictionary_calcs['FN'].append(false_negative(table_drop, 'clinvar_clnsig', i))
         dictionary_calcs['FP'].append(false_positive(table_drop, 'clinvar_clnsig', i))
@@ -162,8 +162,9 @@ if __name__ == '__main__':
     list_FN = get_list_FN(dictionary_calcs)
     list_FP = get_list_FP(dictionary_calcs)
     list_TN = get_list_TN(dictionary_calcs)
-    programs_name = table_drop.columns[14:55]
+    programs_name = table_drop.columns[14:51]
 
+    print('Table_DROP: ', table_drop.columns[14:51])
     dictionary_statistics = {'programs': [], 'sensibility': [], 'especificity': [], 'acuracy': [], 'kappa_value': []}
     for idx in range(len(list_TP)):
         dictionary_statistics['sensibility'].append(calc_sensibility(list_TP[idx], list_FN[idx]))
