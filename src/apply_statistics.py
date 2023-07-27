@@ -1,6 +1,7 @@
 import pandas as pd
+import os
 
-from typing import Dict
+from typing import Dict, List
 from alg_statistics import (drop_colums, true_positive, false_negative, false_positive, true_negative, 
                             get_list_FN, get_list_FP, get_list_TN, get_list_TP, calc_acuracy, calc_sensibility, 
                             calc_especificity, kappa_to_apply)
@@ -44,7 +45,32 @@ def apply_calcs_statistics_in_dataframe(table: pd.DataFrame, cromossomo: str, ge
     return dictionary_statistics
 
 
-if __name__ == '__main__':
+def processar_arquivos_cleanup(caminho_base):
+    # Percorrer os diretórios de cromossomos
+    list_dict_statistics = list()
+    for cromossomo_dir in os.listdir(caminho_base):
+        print(cromossomo_dir)
+        cromossomo_path = os.path.join(caminho_base, cromossomo_dir)
+        if os.path.isdir(cromossomo_path):
+            # Percorrer os diretórios de genes dentro de cada cromossomo
+            for gene_dir in os.listdir(cromossomo_path):
+                gene_path = os.path.join(cromossomo_path, gene_dir)
+                if os.path.isdir(gene_path):
+                    # Verificar se o arquivo cleanup.csv existe no diretório do gene
+                    file_path = os.path.join(gene_path, f"{gene_dir}_cleanup.csv")
+                    if os.path.isfile(file_path):
+                        # Aplicar o algoritmo ao arquivo cleanup.csv
+                        tabela = pd.read_csv(file_path)
+                        print(gene_path.replace((cromossomo_path + '/'), ''))
+                        dict_stats_temp = apply_calcs_statistics_in_dataframe(tabela, cromossomo_path.replace((caminho_base + '/'), ''), gene_path.replace((cromossomo_path + '/'), ''))
+                        list_dict_statistics.append(dict_stats_temp)
+    return list_dict_statistics
 
-    tabela = pd.read_csv('/home/ubuntu/Área de Trabalho/table_teste_TCC.csv')
-    print(apply_calcs_statistics_in_dataframe(tabela, 'cromossomo_1', 'IDUA'))
+
+def convert_list_dict_to_dataframe(list_dict: List[Dict]) -> pd.DataFrame:
+
+    data = {k: [item for sublist in [d[k] for d in list_dict] for item in sublist] for k in list_dict[0]}
+    df = pd.DataFrame(data)
+
+    return df
+

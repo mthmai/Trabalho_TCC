@@ -1,21 +1,14 @@
-import os
+import pandas as pd
 
-def processar_arquivos_cleanup(caminho_base):
-    # Percorrer os diretórios de cromossomos
-    for cromossomo_dir in os.listdir(caminho_base):
-        cromossomo_path = os.path.join(caminho_base, cromossomo_dir)
-        if os.path.isdir(cromossomo_path):
-            # Percorrer os diretórios de genes dentro de cada cromossomo
-            for gene_dir in os.listdir(cromossomo_path):
-                gene_path = os.path.join(cromossomo_path, gene_dir)
-                if os.path.isdir(gene_path):
-                    # Verificar se o arquivo cleanup.csv existe no diretório do gene
-                    file_path = os.path.join(gene_path, f"{gene_dir}_cleanup.csv")
-                    if os.path.isfile(file_path):
-                        # Aplicar o algoritmo ao arquivo cleanup.csv
-                        seu_algoritmo(file_path)
-
+from apply_statistics import processar_arquivos_cleanup, convert_list_dict_to_dataframe
 
 
 if __name__ == '__main__':
-    processar_arquivos_cleanup('/home/ubuntu/Área de Trabalho/Genes_teste')
+    
+    list_dict = (processar_arquivos_cleanup('/home/ubuntu/Área de Trabalho/Genes_teste'))
+    
+    data_frame = convert_list_dict_to_dataframe(list_dict)
+    print(data_frame)
+    data_frame.to_csv('/home/ubuntu/Área de Trabalho/seila_teste.csv', index=False)
+  
+    
