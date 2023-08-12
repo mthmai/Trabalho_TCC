@@ -1,4 +1,7 @@
+import math
+
 import pandas as pd
+
 from sklearn.metrics import cohen_kappa_score
 from typing import List, Dict
 
@@ -87,13 +90,18 @@ def get_list_FN(dictionary_calc: Dict[str, int]) -> List[int]:
 def teste_kappa(program_column: pd.core.series.Series, standard_column: pd.core.series.Series):
     col_1 = program_column.tolist()
     col_2 = standard_column.tolist()
+    col_1_nan = list(filter(lambda x: not math.isnan(x), col_1))
+    col_2_nan = list(filter(lambda x: not math.isnan(x), col_2))
+
+
+    print(col_1_nan, col_2_nan)
     
-    return cohen_kappa_score(col_1, col_2)
+    return cohen_kappa_score(col_1_nan, col_2_nan)
 
 def kappa_to_apply(table: pd.DataFrame, standard_column: str ,dictionary: Dict) -> Dict:
 
     table_cut = table.drop(table[table[standard_column] == 10000].index)
-    for idx in table.columns[14:51]:
+    for idx in table.columns[14:52]:
         cut_df = table_cut.loc[:,[idx, standard_column]]
         drop_df = cut_df.drop(cut_df[cut_df[idx] == 10000].index)
         dictionary['kappa_value'].append(teste_kappa(drop_df[idx], drop_df[standard_column]))    
