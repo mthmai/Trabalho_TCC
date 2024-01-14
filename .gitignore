@@ -7,3 +7,5 @@ Genes_Avaliados/
 *.zip
 *.vcf
 *.Rhistory
+*.swp
+*.pyc
