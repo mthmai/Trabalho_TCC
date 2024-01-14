@@ -4,6 +4,23 @@ import pandas as pd
 import numpy as np
 from typing import List
 
+
+class CleanUpTable:
+    def __init__(self, dataframe: pd.DataFrame):
+        self.dataframe = dataframe
+
+    def _drop_columns(self, list_columns: List[str]):
+        
+        return self.dataframe.drop(columns= list_columns)
+    
+    def _drop_values_to_kappa_score(self, standard_column: str, program_column: str) -> (List[int], List[int]):
+        
+        table_seila = self.dataframe[(self.dataframe[standard_column] != 10000) & (self.dataframe[program_column] != 10000)]
+        
+        return table_seila[standard_column].to_list(), table_seila[program_column].to_list() 
+
+
+
 # Função que busca um ponto e virgula em meio a uma string e retorna a string até o ponto e virgula (ponto importante de limpeza)
 def char_search (string):
     c = ';'
