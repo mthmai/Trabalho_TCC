@@ -1,4 +1,3 @@
-Usuais/
 Genes_Avaliados/
 *.tar.gz
 *.ods
@@ -7,3 +6,4 @@ Genes_Avaliados/
 *.xlsx
 *.zip
 *.vcf
+*.Rhistory
