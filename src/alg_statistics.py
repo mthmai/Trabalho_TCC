@@ -2,9 +2,11 @@ import math
 
 import pandas as pd
 
-from src.table_cleanup import CleanUpTable
+from table_cleanup import CleanUpTable
 from sklearn.metrics import cohen_kappa_score
 from typing import List, Dict
+from settings import list_columns
+
 
 class CalculateStaats(CleanUpTable):
     def __init__(self, dataframe: pd.DataFrame):
@@ -291,7 +293,6 @@ if __name__ == '__main__':
 '''
 if __name__ == '__main__':
     import pandas as pd
-    list_columns = ['HUVEC_confidence_value','H1-hESC_confidence_value','GM12878_confidence_value', 'integrated_confidence_value', 'clinvar_id', 'clinvar_source']
     dataframe = pd.read_csv('/home/matheus_mai/Desktop/table_teste_TCC.csv')
     dataframe_clean = CalculateStaats(dataframe)._drop_columns(list_columns)
     dictionary_statistics = {'programs': [], 'sensibility': [], 'especificity': [], 'acuracy': [], 'kappa_value': []}

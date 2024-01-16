@@ -10,7 +10,12 @@ class CleanUpTable:
         self.dataframe = dataframe
 
     def _drop_columns(self, list_columns: List[str]):
-        
+        for column in list_columns:
+            try:
+                self.dataframe[column]
+            except KeyError:
+                list_columns.remove(column)
+
         return self.dataframe.drop(columns= list_columns)
     
     def _drop_values_to_kappa_score(self, standard_column: str, program_column: str) -> (List[int], List[int]):
