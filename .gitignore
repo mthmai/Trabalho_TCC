@@ -7,3 +7,4 @@ Genes_Avaliados/
 *.zip
 *.vcf
 *.Rhistory
+src/__pycache__/
