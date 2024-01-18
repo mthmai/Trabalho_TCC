@@ -8,3 +8,6 @@ Genes_Avaliados/
 *.vcf
 *.Rhistory
 src/__pycache__/
+*.db
+dbNSFP4.2a/
+teste_refactoring/
