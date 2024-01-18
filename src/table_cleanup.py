@@ -86,19 +86,19 @@ class ScoresData:
         table['CADD_phred'] = table['CADD_phred'].astype('float64')
         table['CADD_phred_hg19'] = table['CADD_phred_hg19'].astype('float64')
         table['DANN_score'] = table['DANN_score'].astype('float64')
-        table['Eigen-phred_coding'] = table['Eigen-phred_coding'].astype('float64')
-        table['Eigen-PC-phred_coding'] = table['Eigen-PC-phred_coding'].astype('float64')
+        table['Eigenphred_coding'] = table['Eigenphred_coding'].astype('float64')
+        table['EigenPCphred_coding'] = table['EigenPCphred_coding'].astype('float64')
         table['GenoCanyon_score'] = table['GenoCanyon_score'].astype('float64')
         table['integrated_fitCons_score'] = table['integrated_fitCons_score'].astype('float64')
         table['integrated_confidence_value'] = table['integrated_confidence_value'].astype('float64')
         table['GM12878_fitCons_score'] = table['GM12878_fitCons_score'].astype('float64')
         table['GM12878_confidence_value'] = table['GM12878_confidence_value'].astype('float64')
-        table['H1-hESC_fitCons_score'] = table['H1-hESC_fitCons_score'].astype('float64')
-        table['H1-hESC_confidence_value'] = table['H1-hESC_confidence_value'].astype('float64')
+        table['H1hESC_fitCons_score'] = table['H1hESC_fitCons_score'].astype('float64')
+        table['H1hESC_confidence_value'] = table['H1hESC_confidence_value'].astype('float64')
         table['HUVEC_fitCons_score'] = table['HUVEC_fitCons_score'].astype('float64')
         table['HUVEC_confidence_value'] = table['HUVEC_confidence_value'].astype('float64')
         table['LINSIGHT'] = table['LINSIGHT'].astype('float64')
-        table['GERP++_RS'] = table['GERP++_RS'].astype('float64')
+        table['GERP_RS'] = table['GERP_RS'].astype('float64')
 
     # MODIFICANDO OS SCORES PARA 0 E 1
     # SIFT_pred
@@ -161,8 +161,8 @@ class ScoresData:
         table.loc[table['MetaRNN_pred'] == 'T', 'MetaRNN_pred'] = 0
 
     # M-CAP_pred
-        table.loc[table['M-CAP_pred'] == 'D', 'M-CAP_pred'] = 1
-        table.loc[table['M-CAP_pred'] == 'T', 'M-CAP_pred'] = 0
+        table.loc[table['MCAP_pred'] == 'D', 'MCAP_pred'] = 1
+        table.loc[table['MCAP_pred'] == 'T', 'MCAP_pred'] = 0
 
     # REVEL_score
         table.loc[table['REVEL_score'] > 0.5, 'REVEL_score'] = 1
@@ -201,8 +201,8 @@ class ScoresData:
         table.loc[table['ClinPred_pred'] == 'T', 'ClinPred_pred'] = 0
 
     # LIST-S2_pred
-        table.loc[table['LIST-S2_pred'] == 'D', 'LIST-S2_pred'] = 1
-        table.loc[table['LIST-S2_pred'] == 'T', 'LIST-S2_pred'] = 0
+        table.loc[table['LISTS2_pred'] == 'D', 'LISTS2_pred'] = 1
+        table.loc[table['LISTS2_pred'] == 'T', 'LISTS2_pred'] = 0
 
     # CADD_phred (ainda não sei o score direito)
         table.loc[table['CADD_phred'] > 20, 'CADD_phred'] = 1
@@ -217,20 +217,20 @@ class ScoresData:
         table.loc[table['DANN_score'] <= 0.5, 'DANN_score'] = 0
 
     # fathmm-MKL_coding_pred
-        table.loc[table['fathmm-MKL_coding_pred'] == 'D', 'fathmm-MKL_coding_pred'] = 1
-        table.loc[table['fathmm-MKL_coding_pred'] == 'N', 'fathmm-MKL_coding_pred'] = 0
+        table.loc[table['fathmmMKL_coding_pred'] == 'D', 'fathmmMKL_coding_pred'] = 1
+        table.loc[table['fathmmMKL_coding_pred'] == 'N', 'fathmmMKL_coding_pred'] = 0
 
     # fathmm-XF_coding_pred
-        table.loc[table['fathmm-XF_coding_pred'] == 'D', 'fathmm-XF_coding_pred'] = 1
-        table.loc[table['fathmm-XF_coding_pred'] == 'N', 'fathmm-XF_coding_pred'] = 0
+        table.loc[table['fathmmXF_coding_pred'] == 'D', 'fathmmXF_coding_pred'] = 1
+        table.loc[table['fathmmXF_coding_pred'] == 'N', 'fathmmXF_coding_pred'] = 0
 
     # Eigen-phred_coding (nao sei o score direito)
-        table.loc[table['Eigen-phred_coding'] > 0.5, 'Eigen-phred_coding'] = 1
-        table.loc[table['Eigen-phred_coding'] <= 0.5, 'Eigen-phred_coding'] = 0
+        table.loc[table['Eigenphred_coding'] > 0.5, 'Eigenphred_coding'] = 1
+        table.loc[table['Eigenphred_coding'] <= 0.5, 'Eigenphred_coding'] = 0
 
     # Eigen-PC-phred_coding (nao sei o score direito)
-        table.loc[table['Eigen-PC-phred_coding'] > 0.5, 'Eigen-PC-phred_coding'] = 1
-        table.loc[table['Eigen-PC-phred_coding'] <= 0.5, 'Eigen-PC-phred_coding'] = 0
+        table.loc[table['EigenPCphred_coding'] > 0.5, 'EigenPCphred_coding'] = 1
+        table.loc[table['EigenPCphred_coding'] <= 0.5, 'EigenPCphred_coding'] = 0
 
     # GenoCanyon_score (não sei o score direito)
         table.loc[table['GenoCanyon_score'] > 0.5, 'GenoCanyon_score'] = 1
@@ -245,8 +245,8 @@ class ScoresData:
         table.loc[table['GM12878_fitCons_score'] <= 0.5, 'GM12878_fitCons_score'] = 0
 
     # H1-hESC_fitCons_score (nao sei o score direito)
-        table.loc[table['H1-hESC_fitCons_score'] > 0.5, 'H1-hESC_fitCons_score'] = 1
-        table.loc[table['H1-hESC_fitCons_score'] <= 0.5, 'H1-hESC_fitCons_score'] = 0
+        table.loc[table['H1hESC_fitCons_score'] > 0.5, 'H1hESC_fitCons_score'] = 1
+        table.loc[table['H1hESC_fitCons_score'] <= 0.5, 'H1hESC_fitCons_score'] = 0
 
     # HUVEC_fitCons_score
         table.loc[table['HUVEC_fitCons_score'] > 0.5, 'HUVEC_fitCons_score'] = 1
@@ -257,8 +257,8 @@ class ScoresData:
         table.loc[table['LINSIGHT'] <= 0.5, 'LINSIGHT'] = 0
 
     # GERP++_RS (nao sei o score direito)
-        table.loc[table['GERP++_RS'] > -6.13, 'GERP++_RS'] = 1
-        table.loc[table['GERP++_RS'] <= 6.13, 'GERP++_RS'] = 0
+        table.loc[table['GERP_RS'] > -6.13, 'GERP_RS'] = 1
+        table.loc[table['GERP_RS'] <= 6.13, 'GERP_RS'] = 0
 
     # clinvar_clnsig
         table.loc[table['clinvar_clnsig'] == 'drug_response', 'clinvar_clnsig'] = 1
@@ -345,7 +345,7 @@ class ApplyCleanAndCreateDir:
                     try: 
                         table = pd.read_csv(f"{self.path_directory}/{directory[child_directory]}/{list_file_names[name]}", sep= "\t", low_memory=False)
                         cleanup_semicolon_table = CleanUpTable(table).semicolon_cleanup()
-                        point_cleanup_table = CleanUpTable(point_cleanup_table).point_cleanup()
+                        point_cleanup_table = CleanUpTable(cleanup_semicolon_table).point_cleanup()
                 
                         point_cleanup_table.columns = columns_table
 
