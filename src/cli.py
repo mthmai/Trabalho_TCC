@@ -2,6 +2,7 @@
 
 import argparse
 import csv
+import logging
 import sys
 import pandas as pd
 import textwrap
@@ -10,8 +11,10 @@ from datetime import datetime
 
 from alg_statistics import CalculateStaats
 from create_db import db, Gene, Alteracao, Classificacao
+from make_log import logger
 from search_database import SearchDataBase
-
+#logging.basicConfig(level=logging.DEBUG,  # Nível mínimo de log a ser exibido (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+#                    format='%(asctime)s - %(levelname)s - %(message)s')
 
 class CliMethods:
     NAME= 'MissPred'
@@ -99,7 +102,7 @@ class CliMethods:
             self.__staats_db_apply(args)
 
         else:
-            print('Função acionada não existe')
+            logger.warning('Função acionada não existe')
 
     def __populate_database(self, args):
         start = datetime.now()
@@ -120,19 +123,20 @@ class CliMethods:
 
         # Feche a conexão com o banco de dados
         db.close()
+        logger.info('Database populada com sucesso!')
         elapsed = str(datetime.now() - start).split('.')[0]
 
-        print(f'Finished. Time elapsed: {elapsed}')
+        logger.info(f'Finished. Time elapsed: {elapsed}')
 
 
     def __staats_db_apply(self, args):
         start = datetime.now()
-        df_inicial = pd.read_csv(args.file)
-        list_dataframes = SearchDataBase(df_inicial).search_data()
-        result_df = SearchDataBase(df_inicial).return_dataframe(list_dataframes)
-        nome_gene = SearchDataBase(df_inicial).gene_name
 
         if args.standard == 1:
+            df_inicial = pd.read_csv(args.file)
+            list_dataframes = SearchDataBase(df_inicial).search_data()
+            result_df = SearchDataBase(df_inicial).return_dataframe(list_dataframes)
+            nome_gene = SearchDataBase(df_inicial).gene_name
             dictionary_statistics = {'gene_name': [], 'programs': [], 'sensibility': [], 'especificity': [], 'acuracy': [], 'kappa_value': []}
             for name_column in result_df.columns[2::]:
                 dictionary_statistics['gene_name'].append(nome_gene)
@@ -142,39 +146,46 @@ class CliMethods:
                 dictionary_statistics['acuracy'].append(CalculateStaats(result_df).calc_acuracy('clinvar_clnsig', name_column))
                 dictionary_statistics['kappa_value'].append(CalculateStaats(result_df).calc_kappa('clinvar_clnsig', name_column))
             
-            for key in dictionary_statistics:
+            #for key in dictionary_statistics:
 
-                print(f'Aqui é o tamanho da lista {key}: {len(dictionary_statistics[key])}')
+                #logger.info(f'Aqui é o tamanho da lista {key}: {len(dictionary_statistics[key])}')
             dataframe_return = pd.DataFrame(dictionary_statistics)
 
             dataframe_return.to_csv(args.fileresult)
 
         elif args.standard == 2:
-            result_df = result_df.drop(columns=['clinvar_clnsig'])
-            try:
-                df_inicial['padrão']
-            except KeyError:
-                print('A coluna padrão não foi encontrada na tabela que foi passada. Verifique isso e tente novamente.')
-            
-            result_df['padrão'] = df_inicial['padrão'].copy()
-            #print(df_final)
-            dictionary_statistics = {'gene_name': [], 'programs': [], 'sensibility': [], 'especificity': [], 'acuracy': [], 'kappa_value': []}
-            for name_column in result_df.columns[2::]:
-                dictionary_statistics['gene_name'].append(nome_gene)
-                dictionary_statistics['programs'].append(name_column)
-                dictionary_statistics['sensibility'].append(CalculateStaats(result_df).calc_sensibility('padrão', name_column))
-                dictionary_statistics['especificity'].append(CalculateStaats(result_df).calc_especificity('padrão', name_column))
-                dictionary_statistics['acuracy'].append(CalculateStaats(result_df).calc_acuracy('padrão', name_column))
-                dictionary_statistics['kappa_value'].append(CalculateStaats(result_df).calc_kappa('padrão', name_column))
-            dataframe_return = pd.DataFrame(dictionary_statistics)
+            df_inicial = pd.read_csv(args.file)
+            list_dataframes = SearchDataBase(df_inicial).search_data()
+            result_df = SearchDataBase(df_inicial).return_dataframe(list_dataframes)
+            nome_gene = SearchDataBase(df_inicial).gene_name
+            if len(result_df) > 1:
+                result_df = result_df.drop(columns=['clinvar_clnsig'])
+                try:
+                    df_inicial['padrão']
+                except KeyError:
+                    logger.warning('A coluna padrão não foi encontrada na tabela que foi passada. Verifique isso e tente novamente.')
+                
+                result_df['padrão'] = df_inicial['padrão'].copy()
+                #print(df_final)
+                dictionary_statistics = {'gene_name': [], 'programs': [], 'sensibility': [], 'especificity': [], 'acuracy': [], 'kappa_value': []}
+                for name_column in result_df.columns[2::]:
+                    dictionary_statistics['gene_name'].append(nome_gene)
+                    dictionary_statistics['programs'].append(name_column)
+                    dictionary_statistics['sensibility'].append(CalculateStaats(result_df).calc_sensibility('padrão', name_column))
+                    dictionary_statistics['especificity'].append(CalculateStaats(result_df).calc_especificity('padrão', name_column))
+                    dictionary_statistics['acuracy'].append(CalculateStaats(result_df).calc_acuracy('padrão', name_column))
+                    dictionary_statistics['kappa_value'].append(CalculateStaats(result_df).calc_kappa('padrão', name_column))
+                dataframe_return = pd.DataFrame(dictionary_statistics)
 
-            dataframe_return.to_csv(args.fileresult)
+                dataframe_return.to_csv(args.fileresult)
+            else:
+                logger.warning(f'Não foi encontrado nenhuma mutação na database. Cheque se a tabela do gene {nome_gene} foi populado')
 
         else:
-            print(f'O numero {args.standard} não é válido. Rode novamente e tente de novo.')
+            logger.warning(f'O numero {args.standard} não é válido. Rode novamente e tente de novo.')
 
         elapsed = str(datetime.now() - start).split('.')[0]
 
-        print(f'Finished. Time elapsed: {elapsed}')
+        logger.info(f'Finished. Time elapsed: {elapsed}')
 
 cli = CliMethods()

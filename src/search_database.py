@@ -5,6 +5,7 @@ from typing import List
 
 from create_db import Classificacao, Alteracao, Gene, db
 from alg_statistics import CalculateStaats
+from make_log import logger
 from settings import columns_table_to_search
 
 class SearchDataBase:
@@ -81,7 +82,7 @@ class SearchDataBase:
                         )
                         df = pd.DataFrame(list(dict_return.dicts()))
                     except DoesNotExist:
-                        print(f'As mutações: {hgvsc_annovar[idx]}, {hgvsp_annovar[idx]} e {hgvsp_vep[idx]} não estão presentes para o gene {gene_name}')
+                        logger.info(f'As mutações: {hgvsc_annovar[idx]}, {hgvsp_annovar[idx]} e {hgvsp_vep[idx]} não estão presentes para o gene {gene_name}')
                         df = pd.DataFrame()
             dataframes.append(df)
             db.close()

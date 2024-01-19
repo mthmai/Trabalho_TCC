@@ -11,3 +11,4 @@ src/__pycache__/
 *.db
 dbNSFP4.2a/
 teste_refactoring/
+log/
