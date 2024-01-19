@@ -22,9 +22,13 @@ class CleanUpTable:
     
     def _drop_values_to_kappa_score(self, standard_column: str, program_column: str) -> (List[int], List[int]):
         
+        #print('Aqui é a tabela antes do table_sla: ', )
         table_seila = self.dataframe[(self.dataframe[standard_column] != 10000) & (self.dataframe[program_column] != 10000)]
         
-        return table_seila[standard_column].to_list(), table_seila[program_column].to_list() 
+        #print('AQUI é a table_sla do drop_values_toKappa: ', table_seila)
+        list_standard_column = list(map(float, table_seila[standard_column]))
+        list_program_column = list(map(float, table_seila[program_column]))
+        return list_standard_column, list_program_column
     
     def _char_search(self, string: str):
         c = ';'
@@ -268,7 +272,7 @@ class ScoresData:
         table.loc[table['clinvar_clnsig'] == 'Likely_benign', 'clinvar_clnsig'] = 0
         table.loc[table['clinvar_clnsig'] == 'Benign', 'clinvar_clnsig'] = 0
         table.loc[table['clinvar_clnsig'] == 'Benign/Likely_benign', 'clinvar_clnsig'] = 0
-        table.loc[table['clinvar_clnsig'] == 'Uncertain_significance', 'clinvar_clnsig'] = 10000
+        table.loc[table['clinvar_clnsig'] == 'Uncertain_significance', 'clinvar_clnsig'] = 10000 
         table.loc[table['clinvar_clnsig'] == 'Conflicting_interpretations_of_pathogenicity', 'clinvar_clnsig'] = 10000
         table.loc[table['clinvar_clnsig'] == 'not_provided', 'clinvar_clnsig'] = 10000
         table.loc[table['clinvar_clnsig'] == 'risk_factor', 'clinvar_clnsig'] = 1

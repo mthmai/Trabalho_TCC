@@ -7,6 +7,7 @@ list_columns = ['HUVEC_confidence_value','H1-hESC_confidence_value','GM12878_con
                     'gnomAD_exomes_AMR_AF', 'gnomAD_exomes_ASJ_AF','gnomAD_exomes_EAS_AF', 'gnomAD_exomes_FIN_AF', 'gnomAD_exomes_NFE_AF',
                     'gnomAD_exomes_SAS_AF', 'clinvar_id', 'clinvar_trait', 'clinvar_var_source']
 
+columns_table_to_search = ['chr','gene_name', 'HGVSc_ANNOVAR', 'HGVSp_ANNOVAR', 'HGVSp_VEP']
 
 columns_table = ['chr', 'pos(1-based)', 'ref', 'alt',	'aaref', 'aaalt', 'rs_dbSNP', 'hg19_chr', 'hg19_pos(1-based)', 'aapos', 'genename', 
                             'HGVSc_ANNOVAR', 'HGVSp_ANNOVAR', 'HGVSp_VEP', 'SIFT_pred', 'SIFT4G_pred', 'Polyphen2_HDIV_pred', 'Polyphen2_HVAR_pred',	'LRT_pred', 

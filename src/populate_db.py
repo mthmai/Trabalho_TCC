@@ -1,5 +1,8 @@
 import csv
+from datetime import datetime
 from create_db import Gene, Alteracao, Classificacao, db
+
+start = datetime.now()
 
 # Leia o arquivo CSV e insira os dados no banco de dados
 csv_file = '/home/matheus_mai/Trabalho_TCC/teste_refactoring/Genes_teste_cleanup/chr_1/ABCA4_cleanup.csv'
@@ -19,3 +22,6 @@ with open(csv_file, 'r') as file:
 
 # Feche a conexão com o banco de dados
 db.close()
+elapsed = str(datetime.now() - start).split('.')[0]
+
+print(f'Finished. Time elapsed: {elapsed}')

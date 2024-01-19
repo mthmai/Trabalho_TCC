@@ -57,6 +57,7 @@ class Classificacao(BaseModel):
     HUVEC_fitCons_score = DecimalField(max_digits=8)
     LINSIGHT = DecimalField(max_digits=8)
     GERP_RS = DecimalField(max_digits=8)
+    clinvar_clnsig = DecimalField(max_digits=8)
 
 
 
