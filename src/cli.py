@@ -1,5 +1,11 @@
+#!/usr/bin/env python3
+
+import argparse
 import csv
+import sys
 import pandas as pd
+import textwrap
+
 from datetime import datetime
 
 from alg_statistics import CalculateStaats
@@ -9,7 +15,7 @@ from search_database import SearchDataBase
 
 class CliMethods:
     NAME= 'MissPred'
-    CLI_VERSION = 'v1.2'
+    CLI_VERSION = 'v1.2 '
     DESCRIPTION = 'Programa de avaliação de preditores de variantes genéticas'
     asterisc = '*'
     space = ' '
@@ -18,9 +24,9 @@ class CliMethods:
         self.__run()
 
     def __run(self):
-        self.parser = arparse.ArgumentParser(
+        self.parser = argparse.ArgumentParser(
             prog = ' '.join(sys.argv),
-            formatter_class = arqparse.RawDescriptionHelpFormatter,
+            formatter_class = argparse.RawDescriptionHelpFormatter,
             description=textwrap.dedent(
                 """\
                 \33[1m{0}
@@ -29,9 +35,9 @@ class CliMethods:
                 *{3}{5}{3}*
                 {0}
                 \33[0m
-                """.format(self.asterisc * 63, self.space * 23, self.CLI_VERSION, self.space * 14, self.NAME, self.DESCRIPTION,)
+                """.format(self.asterisc * 68, self.space * 26, self.CLI_VERSION, self.space * 4, self.NAME, self.DESCRIPTION,)
             ),
-            epilog = 'Hospital de Clinicas Porto Alegre - RS - Brasil'
+            epilog = 'Hospital de Clinicas Porto Alegre - RS - Brasil',
             usage = '%(prog)s [options]',
             conflict_handler = 'resolve',
         )
@@ -40,7 +46,7 @@ class CliMethods:
 
         self.parser.add_argument('-v', '--version', action = 'version')
         subparsers = self.parser.add_subparsers(help = 'MissPred comandos implementados', dest = 'command')
-
+        
         self.populate_db = subparsers.add_parser(
             'populate',
             help = 'Popular dados na database',
@@ -84,11 +90,12 @@ class CliMethods:
             type= str,
         )
 
+        args = self.parser.parse_args()
 
-        if args_command == 'populate':
+        if args.command == 'populate':
             self.__populate_database(args)
 
-        elif args_command == 'staatsdb':
+        elif args.command == 'staatsdb':
             self.__staats_db_apply(args)
 
         else:
@@ -133,8 +140,11 @@ class CliMethods:
                 dictionary_statistics['sensibility'].append(CalculateStaats(result_df).calc_sensibility('clinvar_clnsig', name_column))
                 dictionary_statistics['especificity'].append(CalculateStaats(result_df).calc_especificity('clinvar_clnsig', name_column))
                 dictionary_statistics['acuracy'].append(CalculateStaats(result_df).calc_acuracy('clinvar_clnsig', name_column))
-                dictionary_statistics['sensibility'].append(CalculateStaats(result_df).calc_sensibility('clinvar_clnsig', name_column))
                 dictionary_statistics['kappa_value'].append(CalculateStaats(result_df).calc_kappa('clinvar_clnsig', name_column))
+            
+            for key in dictionary_statistics:
+
+                print(f'Aqui é o tamanho da lista {key}: {len(dictionary_statistics[key])}')
             dataframe_return = pd.DataFrame(dictionary_statistics)
 
             dataframe_return.to_csv(args.fileresult)
@@ -155,7 +165,6 @@ class CliMethods:
                 dictionary_statistics['sensibility'].append(CalculateStaats(result_df).calc_sensibility('padrão', name_column))
                 dictionary_statistics['especificity'].append(CalculateStaats(result_df).calc_especificity('padrão', name_column))
                 dictionary_statistics['acuracy'].append(CalculateStaats(result_df).calc_acuracy('padrão', name_column))
-                dictionary_statistics['sensibility'].append(CalculateStaats(result_df).calc_sensibility('padrão', name_column))
                 dictionary_statistics['kappa_value'].append(CalculateStaats(result_df).calc_kappa('padrão', name_column))
             dataframe_return = pd.DataFrame(dictionary_statistics)
 
@@ -167,3 +176,5 @@ class CliMethods:
         elapsed = str(datetime.now() - start).split('.')[0]
 
         print(f'Finished. Time elapsed: {elapsed}')
+
+cli = CliMethods()
