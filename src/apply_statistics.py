@@ -4,9 +4,6 @@ import os
 from typing import Dict, List, Any
 from alg_statistics import CalculateStaats
 from make_log import logger
-from alg_statistics import (drop_colums, true_positive, false_negative, false_positive, true_negative, 
-                            get_list_FN, get_list_FP, get_list_TN, get_list_TP, calc_acuracy, calc_sensibility, 
-                            calc_especificity, kappa_to_apply)
 from settings import list_columns
 
 class ApplyStaats:
@@ -49,10 +46,11 @@ class ApplyStaatsInFiles:
                     # Verificar se a tabela contém '_cleanup.csv'
                     if tabela.endswith('_cleanup.csv'):
                         file_path = os.path.join(cromossomo_path, tabela)
-                        tabela = pd.read_csv(file_path)
-                        logger.info(file_path.replace((cromossomo_path + '/'), ''))
-                        logger.info('CROMOSSOMO PATH REPLACE: ', cromossomo_path.replace((absolute_path_directory + '/'), ''))
-                        logger.info('FILE PATH REPLACE', file_path.replace((cromossomo_path + '/'), ''))
+                        tabela = pd.read_csv(file_path, low_memory=False)
+                        #print('Path: ', file_path)
+                        #logger.info(file_path.replace((cromossomo_path + '/'), ''))
+                        #logger.info('CROMOSSOMO PATH REPLACE: ', cromossomo_path.replace((absolute_path_directory + '/'), ''))
+                        #logger.info('FILE PATH REPLACE', file_path.replace((cromossomo_path + '/'), ''))
                         genename = file_path.replace((cromossomo_path + '/'), '')
                         dict_stats_temp = ApplyStaats(tabela).return_dict_staats(cromossomo_path.replace((absolute_path_directory + '/'), ''), genename.replace(('_cleanup.csv'), ''))
                         list_dict_statistics.append(dict_stats_temp)
@@ -60,7 +58,7 @@ class ApplyStaatsInFiles:
     
     def convert_list_dict_to_dataframe(self, absolute_path_directory: str) -> pd.DataFrame:
         list_dict = self.process_files(absolute_path_directory)
-        logger.info("A lista de dicionarios: ", list_dict)
+        #logger.info("A lista de dicionarios: ", list_dict)
         data = {k: [item for sublist in [d[k] for d in list_dict] for item in sublist] for k in list_dict[0]}
         df = pd.DataFrame(data)
 
