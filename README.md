@@ -37,7 +37,7 @@ ___
 - gene - representando o gene desejado;
     ###### Esse arquivo criado deverá ser passado para o ***grep_genes.sh***. Nesse arquivo, primeiramente modifique o trecho **pasta="/home/matheus_mai/Trabalho_TCC/dbNSFP4.2a"** para o diretório onde você colocou os coortes realizado com o ***setup.sh***. Segundamente, modifique o trecho **arquivo_nomes="/home/matheus_mai/Trabalho_TCC/genes_utilizados.csv"** para o caminho absoluto do arquivo criado com os cromossomos e genes;
 
-    ###### Após isso, será gerado um diretório para cada gene, e dentro desses diretórios terão as tabelas para cada um dos genes desejado com o seguinte nome: **{GENE}_ocorrencia** . Ex:
+    ###### Após isso, será gerado um diretório geral chamado Gene e subdiretórios para cada cromossomo, e dentro desses diretórios terão as tabelas para cada um dos genes desejado com o seguinte nome: **{GENE}_ocorrencia.csv** . Ex:
     - ###### chr_1
         - ###### ABCA4_ocorrencia.csv
         - ###### FLG_ocorrencia.csv
@@ -48,7 +48,7 @@ ___
         - ###### ...
 
 ##### - Após isso então será gerado arquivos que desejamos trabalhar, e então podemos executar o programa de fato.
-- Primeiramente deve-se entrar na pasta ***src/*** do projeto e então executar o seguinte comando: ***cli.py cleanup -d {CAMINHO DO DIRETÓRIO COM OS GENES QUE RECÉM FOI CRIADO}***. Esse comando vai gerar um arquivo ***_cleanup.csv*** para cada um dos genes, e esses arquivos cleanup serão utilizados no comando abaixo;
+- Primeiramente deve-se entrar na pasta ***src/*** do projeto e então executar o seguinte comando: ***cli.py cleanup -d {CAMINHO DO DIRETÓRIO COM OS GENES QUE RECÉM FOI CRIADO}***. Esse comando vai gerar um arquivo ***_cleanup.csv*** para cada um dos genes, e esses arquivos cleanup serão utilizados no comando abaixo. O script só funciona para os dados limpos, ou seja, as tabelas ***_cleanup.csv***;
 
 - Após termos as tabelas dos genes limpos, podemos rodar então os cálculos estatísticos. Nesse caso, temos três opções:
     - Podemos realizar as estatísticas para todos genes de uma vez só utilizando o arquivo ***run.py***. Apenas deve-se modificar a variável ***absolute_path*** que deve ser passado o diretório geral com os subdiretórios representando os cromossomos com arquivos limpos representando os genes. E então rodar ***python3 run.py***;
