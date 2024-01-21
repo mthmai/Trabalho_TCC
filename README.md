@@ -48,7 +48,7 @@ ___
         - ###### ...
 
 ##### - Após isso então será gerado arquivos que desejamos trabalhar, e então podemos executar o programa de fato.
-- Primeiramente deve-se entrar na pasta ***src/*** do projeto e então executar o seguinte comando: ***cli.py cleanup -d {CAMINHO DO DIRETÓRIO COM OS GENES QUE RECÉM FOI CRIADO}***. Esse comando vai gerar um arquivo ***_cleanup.csv*** para cada um dos genes, e esses arquivos cleanup serão utilizados no comando abaixo. O script só funciona para os dados limpos, ou seja, as tabelas ***_cleanup.csv***;
+- Primeiramente deve-se entrar na pasta ***src/*** do projeto e então executar o seguinte comando: ***python3 cli.py cleanup -d {CAMINHO DO DIRETÓRIO COM OS GENES QUE RECÉM FOI CRIADO}***. Esse comando vai gerar um arquivo ***_cleanup.csv*** para cada um dos genes, e esses arquivos cleanup serão utilizados no comando abaixo. O script só funciona para os dados limpos, ou seja, as tabelas ***_cleanup.csv***;
 
 - Após termos as tabelas dos genes limpos, podemos rodar então os cálculos estatísticos. Nesse caso, temos três opções:
     - Podemos realizar as estatísticas para todos genes de uma vez só utilizando o arquivo ***run.py***. Apenas deve-se modificar a variável ***absolute_path*** que deve ser passado o diretório geral com os subdiretórios representando os cromossomos com arquivos limpos representando os genes. E então rodar ***python3 run.py***;
