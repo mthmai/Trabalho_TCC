@@ -5,7 +5,7 @@ start=$(date +%s)
 pasta="/home/matheus_mai/Trabalho_TCC/dbNSFP4.2a"
 cd $pasta
 mkdir Genes/
-pasta="/home/matheus_mai/Trabalho_TCC/dbNSFP4.2a"
+
 
 # Arquivo contendo os nomes a serem buscados
 arquivo_nomes="/home/matheus_mai/Trabalho_TCC/genes_utilizados.csv"
