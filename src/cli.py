@@ -10,9 +10,11 @@ import textwrap
 from datetime import datetime
 
 from alg_statistics import CalculateStaats
+from apply_statistics import ApplyStaats, ApplyStaatsInFiles
 from create_db import db, Gene, Alteracao, Classificacao
 from make_log import logger
 from search_database import SearchDataBase
+from table_cleanup import ApplyCleanAndCreateDir
 #logging.basicConfig(level=logging.DEBUG,  # Nível mínimo de log a ser exibido (DEBUG, INFO, WARNING, ERROR, CRITICAL)
 #                    format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -50,6 +52,20 @@ class CliMethods:
         self.parser.add_argument('-v', '--version', action = 'version')
         subparsers = self.parser.add_subparsers(help = 'MissPred comandos implementados', dest = 'command')
         
+        self.cleanup = subparsers.add_parser(
+            'cleanup',
+            help = 'Limpeza das tabelas a serem usadas',
+            conflict_handler= 'resolve',
+        )
+
+        self.cleanup.add_argument(
+            '-d',
+            '--directory',
+            help = 'Diretório com as tabelas a serem limpas ',
+            required = True,
+            type= str,
+        )
+
         self.populate_db = subparsers.add_parser(
             'populate',
             help = 'Popular dados na database',
@@ -93,16 +109,52 @@ class CliMethods:
             type= str,
         )
 
+        self.calc_gene = subparsers.add_parser(
+            'calcgene',
+            help = 'Aplicar calculo de estatísticas para todo um gene',
+            conflict_handler = 'resolve',
+        )
+
+        self.calc_gene.add_argument(
+            '-f',
+            '--file',
+            help = 'Tabela para determinado gene que deseja avaliar. Ex: ',
+            required = True,
+            type= str,
+        )
+        
+        self.calc_gene.add_argument(
+            '-sf',
+            '--savefile',
+            help = 'Tabela para determinado gene que deseja avaliar. Ex: ',
+            required = True,
+            type= str,
+        )
+
         args = self.parser.parse_args()
 
-        if args.command == 'populate':
+        if args.command == 'cleanup':
+            self.__cleanup_table(args)
+        
+        elif args.command == 'populate':
             self.__populate_database(args)
 
         elif args.command == 'staatsdb':
             self.__staats_db_apply(args)
+        
+        elif args.command == 'calcgene':
+            self.__calc_gene(args)
 
         else:
             logger.warning('Função acionada não existe')
+
+    def __cleanup_table(self, args):
+        start = datetime.now()
+        ApplyCleanAndCreateDir(args.directory).apply_cleanup()
+        elapsed = str(datetime.now() - start).split('.')[0]
+
+        logger.info(f'Finished. Time elapsed: {elapsed}')
+
 
     def __populate_database(self, args):
         start = datetime.now()
@@ -187,5 +239,18 @@ class CliMethods:
         elapsed = str(datetime.now() - start).split('.')[0]
 
         logger.info(f'Finished. Time elapsed: {elapsed}')
+
+    def __calc_gene(self, args):
+        start = datetime.now()
+        dataframe = pd.read_csv(args.file)
+        chr = dataframe['chr'].unique()[0]
+        genename = dataframe['genename'].unique()[0]
+
+        ApplyStaats(dataframe).dict_to_dataframe(chr, genename, args.savefile)
+        elapsed = str(datetime.now() - start).split('.')[0]
+
+        logger.info(f'Finished. Time elapsed: {elapsed}')
+
+
 
 cli = CliMethods()

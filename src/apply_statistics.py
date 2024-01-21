@@ -29,6 +29,12 @@ class ApplyStaats:
 
         return dictionary_statistics
     
+    def dict_to_dataframe(self, chr: str, genename: str, save_path: str):
+        df = pd.DataFrame(self.return_dict_staats(chr, genename))
+
+        return df.to_csv(save_path, index=False)
+
+
 class ApplyStaatsInFiles:
     def process_files(self, absolute_path_directory: str):
         # Percorrer os diretórios de cromossomos
