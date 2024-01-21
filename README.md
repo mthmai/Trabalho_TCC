@@ -19,7 +19,7 @@ ___
 
 ##### - Após o download, deve-se rodar o arquivo ***setup.sh***. Porém devemos nos atentar a algumas coisas:
 - Deve-se fazer o unzip do banco baixado e colocar os arquivos em uma pasta específica;
-- Após isso, edite no arquivo ***setup.sh*** a variavel ***pasta*** e coloque o caminho absoluto para o local onde o banco de dados;
+- Após isso, edite no arquivo ***setup.sh*** a variavel ***pasta*** e coloque o caminho absoluto para o local onde está o banco de dados;
 - OBS: rodar o ***setup.sh*** demora bastante e ocupa uma certa memória da máquina, então atente-se a isso;
 
 ##### - Depois de organizar as coisas e ***rodar o setup.sh***. Você terá vários arquivos nessa pasta, referente a cada um dos cromossomos. Cada arquivo ocupa cerca de **3GB de memória**. Arquivos gerados (chr 1 ao Y - mostramos apenas alguns), exemplo: 
