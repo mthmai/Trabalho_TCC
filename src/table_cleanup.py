@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 from typing import List
 
+from make_log import logger
 from settings import columns_table
 
 
@@ -317,74 +318,156 @@ class ApplyCleanAndCreateDir:
 
         general_directory = os.listdir(self.path_directory)
         general_directory.sort()
-        list_file_names = list()
-        unique_list_file_names = list()
+        list_file_paths = []
 
         for child_directory in general_directory:
-            try: 
-                files = os.listdir(f'{self.path_directory}/{child_directory}')
-            
-                list_file_names.append(files)
-
+            try:
+                directory_path = os.path.join(self.path_directory, child_directory)
+                files = os.listdir(directory_path)
+                file_paths = [os.path.abspath(os.path.join(directory_path, file)) for file in files]
+                list_file_paths.extend(file_paths)
             except NotADirectoryError:
-                ...
-        
-        for list_name in list_file_names:
-            unique_list_file_names.extend(list_name)
+                print(f'Erro de NotADirectory {child_directory}')
 
+        return general_directory, list_file_paths
 
-        return general_directory, unique_list_file_names
+    def apply_cleanup(self):
+        directory, list_file_paths = self.file_names_directories()
+        for file_name in list_file_paths:
+            try: 
+                table = pd.read_csv(file_name, sep="\t", low_memory=False)
+                cleanup_semicolon_table = CleanUpTable(table).semicolon_cleanup()
+                point_cleanup_table = CleanUpTable(cleanup_semicolon_table).point_cleanup()
 
+                point_cleanup_table.columns = columns_table
 
-    def apply_cleanup(self)-> None:
+                table_modify = ScoresData(point_cleanup_table).modify_scores()
+                finish_table = ScoresData(table_modify).clinvar_null_drop()
 
-        directory, list_file_names = self.file_names_directories()
+                fourth_underscore_position = file_name.find('_', file_name.find('_', file_name.find('_', file_name.find('_') + 1) + 1) + 1)
+                new_name = file_name[:fourth_underscore_position]
 
-        for child_directory in range (0, len(directory)):
-            
-            for name in range (0, len(list_file_names)):
+                #print(f'Aqui é o print do new_name {new_name}')
+
+                # Salva o arquivo no diretório correto
+                finish_table.to_csv(f'{new_name}_cleanup.csv', index=False)
+
+            except (pd.errors.ParserError, ValueError):
                 try:
-                    # Verifica se o arquivo existe no diretório atual
-                    caminho_arquivo = os.path.join(directory[child_directory], list_file_names[name])
-                    try: 
-                        table = pd.read_csv(f"{self.path_directory}/{directory[child_directory]}/{list_file_names[name]}", sep= "\t", low_memory=False)
+                    table = pd.read_csv(file_name, sep=" ", low_memory=False)
+                    cleanup_semicolon_table = CleanUpTable(table).semicolon_cleanup()
+                    point_cleanup_table = CleanUpTable(cleanup_semicolon_table).point_cleanup()
+
+                    point_cleanup_table.columns = columns_table
+
+                    table_modify = ScoresData(point_cleanup_table).modify_scores()
+                    finish_table = ScoresData(table_modify).clinvar_null_drop()
+
+                    fourth_underscore_position = file_name.find('_', file_name.find('_', file_name.find('_', file_name.find('_') + 1) + 1) + 1)
+                    new_name = file_name[:fourth_underscore_position]
+
+                    #print(f'Aqui é o print do new_name {new_name}')
+
+                    # Salva o arquivo no diretório correto
+                    finish_table.to_csv(f'{new_name}_cleanup.csv', index=False)
+
+                except (pd.errors.ParserError, ValueError):
+                    try:
+                        table = pd.read_csv(file_name, sep=",", low_memory=False)
                         cleanup_semicolon_table = CleanUpTable(table).semicolon_cleanup()
                         point_cleanup_table = CleanUpTable(cleanup_semicolon_table).point_cleanup()
-                
+
                         point_cleanup_table.columns = columns_table
 
                         table_modify = ScoresData(point_cleanup_table).modify_scores()
                         finish_table = ScoresData(table_modify).clinvar_null_drop()
-                        pos = list_file_names[name].find('_')
-                        new_name = list_file_names[name][:pos]
-                        #print(new_name)
 
-                        finish_table.to_csv(f"{self.path_directory}/{directory[child_directory]}/{new_name}_cleanup.csv", index= False)
+                        fourth_underscore_position = file_name.find('_', file_name.find('_', file_name.find('_', file_name.find('_') + 1) + 1) + 1)
+                        new_name = file_name[:fourth_underscore_position]
 
-                    except (pd.errors.ParserError, ValueError):
-                        table = pd.read_csv(f"{self.path_directory}/{directory[child_directory]}/{list_file_names[name]}", sep= " ", low_memory=False)
+                        #print(f'Aqui é o print do new_name {new_name}')
+
+                        # Salva o arquivo no diretório correto
+                        finish_table.to_csv(f'{new_name}_cleanup.csv', index=False)
+                    except pd.errors.EmptyDataError:
+                        logger.warning(f'Deu Erro de Empty com o {file_name}')
+            except IndexError:
+                logger.warning(f'Deu Erro de INDEX com o {file_name}')
+                break
+            except FileNotFoundError:
+                logger.warning(f'Deu Erro de FileNotFound com o {file_name}')
+            #    child_directory += 1
+'''
+    def apply_cleanup(self)-> None:
+        directory, list_file_paths = self.file_names_directories()
+        for child_directory in directory:
+            # Obtém a lista de nomes de arquivo para o diretório atual
+            list_file_paths = os.listdir(os.path.join(self.path_directory, child_directory))
+
+            for file_name in list_file_paths:
+                file_path = os.path.join(self.path_directory, child_directory, file_name)
+
+                try:
+                    table = pd.read_csv(file_path, sep="\t", low_memory=False)
+                    cleanup_semicolon_table = CleanUpTable(table).semicolon_cleanup()
+                    point_cleanup_table = CleanUpTable(cleanup_semicolon_table).point_cleanup()
+
+                    point_cleanup_table.columns = columns_table
+
+                    table_modify = ScoresData(point_cleanup_table).modify_scores()
+                    finish_table = ScoresData(table_modify).clinvar_null_drop()
+
+                    pos = os.path.basename(file_name).find('_')
+                    new_name = os.path.basename(file_name)[:pos]
+
+                    print(f'Aqui é o print do new_name {new_name}')
+
+                    # Salva o arquivo no diretório correto
+                    finish_table.to_csv(os.path.join(self.path_directory, child_directory, f'{new_name}_cleanup.csv'), index=False)
+
+                except (pd.errors.ParserError, ValueError):
+                    try:
+                        table = pd.read_csv(file_path, sep=" ", low_memory=False)
                         cleanup_semicolon_table = CleanUpTable(table).semicolon_cleanup()
                         point_cleanup_table = CleanUpTable(cleanup_semicolon_table).point_cleanup()
-                
+
                         point_cleanup_table.columns = columns_table
 
                         table_modify = ScoresData(point_cleanup_table).modify_scores()
                         finish_table = ScoresData(table_modify).clinvar_null_drop()
-                        pos = list_file_names[name].find('_')
-                        new_name = list_file_names[name][:pos]
-                        #print(new_name)
 
-                        finish_table.to_csv(f"{self.path_directory}/{directory[child_directory]}/{new_name}_cleanup.csv", index= False)
-                    
-                except pd.errors.EmptyDataError:
-                    os.remove(f"{self.path_directory}/{directory[child_directory]}/{list_file_names[name]}")
+                        pos = os.path.basename(file_path).find('_')
+                        new_name = os.path.basename(file_path)[:pos]
 
+                        print(f'Aqui é o print do new_name {new_name}')
+
+                        finish_table.to_csv(os.path.join(self.path_directory, directory[child_directory], f'{new_name}_cleanup.csv'), index=False)
+                    except pd.errors.ParserError:
+                        table = pd.read_csv(file_path, sep=",", low_memory=False)
+                        cleanup_semicolon_table = CleanUpTable(table).semicolon_cleanup()
+                        point_cleanup_table = CleanUpTable(cleanup_semicolon_table).point_cleanup()
+
+                        point_cleanup_table.columns = columns_table
+
+                        table_modify = ScoresData(point_cleanup_table).modify_scores()
+                        finish_table = ScoresData(table_modify).clinvar_null_drop()
+
+                        pos = os.path.basename(file_path).find('_')
+                        new_name = os.path.basename(file_path)[:pos]
+
+                        print(f'Aqui é o print do new_name {new_name}')
+
+                        finish_table.to_csv(os.path.join(self.path_directory, directory[child_directory], f'{new_name}_cleanup.csv'), index=False)
+
+                    except pd.errors.EmptyDataError:
+                        print(f'Deu Erro de Empty com o {os.path.basename(file_path)}')
                 except IndexError:
+                    print(f'Deu Erro de INDEX com o {file_path}')
                     break
-                
-                except FileNotFoundError: 
+                except FileNotFoundError:
+                    print(f'Deu Erro de FileNotFound com o {file_path}')
                     child_directory += 1
-
+'''
 
 if __name__ ==  '__main__':
 
