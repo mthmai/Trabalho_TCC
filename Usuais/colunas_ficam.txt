@@ -1,0 +1,198 @@
+Columns of dbNSFP_variant:
+1	chr: chromosome number
+2	pos(1-based): physical position on the chromosome as to hg38 (1-based coordinate).
+		For mitochondrial SNV, this position refers to the rCRS (GenBank: NC_012920). 
+3	ref: reference nucleotide allele (as on the + strand)
+4	alt: alternative nucleotide allele (as on the + strand)
+5	aaref: reference amino acid
+		"." if the variant is a splicing site SNP (2bp on each end of an intron)
+6	aaalt: alternative amino acid
+		"." if the variant is a splicing site SNP (2bp on each end of an intron)
+7	rs_dbSNP: rs number from dbSNP
+8	hg19_chr: chromosome as to hg19, "." means missing
+9	hg19_pos(1-based): physical position on the chromosome as to hg19 (1-based coordinate).
+		For mitochondrial SNV, this position refers to a YRI sequence (GenBank: AF347015)
+12	aapos: amino acid position as to the protein.
+		"-1" if the variant is a splicing site SNP (2bp on each end of an intron). 
+		Multiple entries separated by ";", corresponding to Ensembl_proteinid
+13	genename: gene name; if the nsSNV can be assigned to multiple genes, gene names are
+		separated by ";"
+19	HGVSc_ANNOVAR: HGVS coding variant presentation from ANNOVAR
+		Multiple entries separated by ";", corresponds to Ensembl_transcriptid
+20	HGVSp_ANNOVAR: HGVS protein variant presentation from ANNOVAR
+		Multiple entries separated by ";", corresponds to Ensembl_proteinid
+24	HGVSp_VEP: HGVS protein variant presentation from VEP
+		Multiple entries separated by ";", corresponds to Ensembl_proteinid
+39	SIFT_pred: If SIFTori is smaller than 0.05 (rankscore>0.39575) the corresponding nsSNV is
+		predicted as "D(amaging)"; otherwise it is predicted as "T(olerated)". 
+		Multiple predictions separated by ";"
+42	SIFT4G_pred: If SIFT4G is < 0.05 the corresponding nsSNV is
+		predicted as "D(amaging)"; otherwise it is predicted as "T(olerated)". 
+		Multiple scores separated by ",", corresponding to Ensembl_transcriptid
+45	Polyphen2_HDIV_pred: Polyphen2 prediction based on HumDiv, "D" ("probably damaging",
+		HDIV score in [0.957,1] or rankscore in [0.55859,0.91137]), "P" ("possibly damaging", 
+		HDIV score in [0.454,0.956] or rankscore in [0.37043,0.55681]) and "B" ("benign", 
+		HDIV score in [0,0.452] or rankscore in [0.03061,0.36974]). Score cutoff for binary 
+		classification is 0.5 for HDIV score or 0.38028 for rankscore, i.e. the prediction is 
+		"neutral" if the HDIV score is smaller than 0.5 (rankscore is smaller than 0.38028), 
+		and "deleterious" if the HDIV score is larger than 0.5 (rankscore is larger than 
+		0.38028). Multiple entries are separated by ";", corresponding to Uniprot_acc.
+48	Polyphen2_HVAR_pred: Polyphen2 prediction based on HumVar, "D" ("probably damaging",
+		HVAR score in [0.909,1] or rankscore in [0.65694,0.97581]), "P" ("possibly damaging", 
+		HVAR in [0.447,0.908] or rankscore in [0.47121,0.65622]) and "B" ("benign", HVAR 
+		score in [0,0.446] or rankscore in [0.01493,0.47076]). Score cutoff for binary 
+		classification is 0.5 for HVAR score or 0.48762 for rankscore, i.e. the prediction 
+		is "neutral" if the HVAR score is smaller than 0.5 (rankscore is smaller than 
+		0.48762), and "deleterious" if the HVAR score is larger than 0.5 (rankscore is larger 
+		than 0.48762). Multiple entries are separated by ";", corresponding to Uniprot_acc.
+51	LRT_pred: LRT prediction, D(eleterious), N(eutral) or U(nknown), which is not solely
+		determined by the score. 
+55	MutationTaster_pred: MutationTaster prediction, "A" ("disease_causing_automatic"),
+		"D" ("disease_causing"), "N" ("polymorphism") or "P" ("polymorphism_automatic"). The 
+		score cutoff between "D" and "N" is 0.5 for MTnew and 0.31733 for the rankscore.
+60	MutationAssessor_pred: MutationAssessor's functional impact of a variant -
+		predicted functional, i.e. high ("H") or medium ("M"), or predicted non-functional,
+		i.e. low ("L") or neutral ("N"). The MAori score cutoffs between "H" and "M", 
+		"M" and "L", and "L" and "N", are 3.5, 1.935 and 0.8, respectively. The rankscore cutoffs 
+		between "H" and "M", "M" and "L", and "L" and "N", are 0.9307, 0.52043 and 0.19675, 
+		respectively.
+63	FATHMM_pred: If a FATHMMori score is <=-1.5 (or rankscore >=0.81332) the corresponding nsSNV
+		is predicted as "D(AMAGING)"; otherwise it is predicted as "T(OLERATED)".
+		Multiple predictions separated by ";", corresponding to Ensembl_proteinid.
+66	PROVEAN_pred: If PROVEANori <= -2.5 (rankscore>=0.54382) the corresponding nsSNV is
+		predicted as "D(amaging)"; otherwise it is predicted as "N(eutral)". 
+		Multiple predictions separated by ";", corresponding to Ensembl_proteinid.
+67	VEST4_score: VEST 4.0 score. Score ranges from 0 to 1. The larger the score the more likely
+		the mutation may cause functional change. 
+		Multiple scores separated by ";", corresponding to Ensembl_transcriptid.
+		Please note this score is free for non-commercial use. For more details please refer to 
+		http://wiki.chasmsoftware.org/index.php/SoftwareLicense. Commercial users should contact 
+		the Johns Hopkins Technology Transfer office.
+71	MetaSVM_pred: Prediction of our SVM based ensemble prediction score,"T(olerated)" or
+		"D(amaging)". The score cutoff between "D" and "T" is 0. The rankscore cutoff between
+		"D" and "T" is 0.82257.
+74	MetaLR_pred: Prediction of our MetaLR based ensemble prediction score,"T(olerated)" or
+		"D(amaging)". The score cutoff between "D" and "T" is 0.5. The rankscore cutoff between 
+		"D" and "T" is 0.81101.
+78	MetaRNN_pred: Prediction of our MetaRNN based ensemble prediction score,"T(olerated)" or
+		"D(amaging)". The score cutoff between "D" and "T" is 0.5. The rankscore cutoff between 
+		"D" and "T" is 0.6149.
+81	M-CAP_pred: Prediction of M-CAP score based on the authors' recommendation, "T(olerated)" or
+		"D(amaging)". The score cutoff between "D" and "T" is 0.025.
+82	REVEL_score: REVEL is an ensemble score based on 13 individual scores for predicting the
+		pathogenicity of missense variants. Scores range from 0 to 1. The larger the score the more 
+		likely the SNP has damaging effect. "REVEL scores are freely available for non-commercial use.  
+		For other uses, please contact Weiva Sieh" (weiva.sieh@mssm.edu)
+84	MutPred_score: General MutPred score. Scores range from 0 to 1. The larger the score the more
+		likely the SNP has damaging effect.
+89	MVP_score: A pathogenicity prediction score for missense variants using deep learning approach.
+		The range of MVP score is from 0 to 1. The larger the score, the more likely the variant is 
+		pathogenic. The authors suggest thresholds of 0.7 and 0.75 for separating damaging vs tolerant 
+		variants in constrained genes (ExAC pLI >=0.5) and non-constrained genes (ExAC pLI<0.5), respectively. 
+		Details see doi: http://dx.doi.org/10.1101/259390
+		Multiple entries are separated by ";", corresponding to Ensembl_transcriptid.
+91	MPC_score: A deleteriousness prediction score for missense variants based on regional missense
+		constraint. The range of MPC score is 0 to 5. The larger the score, the more likely the variant is 
+		pathogenic. Details see doi: http://dx.doi.org/10.1101/148353.
+		Multiple entries are separated by ";", corresponding to Ensembl_transcriptid.
+95	PrimateAI_pred: Prediction of PrimateAI score based on the authors' recommendation, "T(olerated)" or
+		"D(amaging)". The score cutoff between "D" and "T" is 0.803.
+98	DEOGEN2_pred: Prediction of DEOGEN2 score based on the authors' recommendation, "T(olerated)" or
+		"D(amaging)". The score cutoff between "D" and "T" is 0.5.
+101	BayesDel_addAF_pred: Prediction of BayesDel_addAF score based on the authors' recommendation, "T(olerated)" or
+		"D(amaging)". The score cutoff between "D" and "T" is 0.0692655.
+104	BayesDel_noAF_pred: Prediction of BayesDel_noAF score based on the authors' recommendation, "T(olerated)" or
+		"D(amaging)". The score cutoff between "D" and "T" is -0.0570105.
+107	ClinPred_pred: Prediction of ClinPred score based on the authors' recommendation, "T(olerated)" or "D(amaging)".
+		The score cutoff between "D" and "T" is 0.5.
+110	LIST-S2_pred: Prediction of LIST-S2 score based on the authors' recommendation, "T(olerated)" or "D(amaging)".
+		The score cutoff between "D" and "T" is 0.85.
+119	CADD_phred: CADD phred-like score. This is phred-like rank score based on whole genome
+		CADD raw scores. Please refer to Kircher et al. (2014) Nature Genetics 46(3):310-5 
+		for details. The larger the score the more likely the SNP has damaging effect. 
+		Please note the following copyright statement for CADD: "CADD scores 
+		(http://cadd.gs.washington.edu/) are Copyright 2013 University of Washington and 
+		Hudson-Alpha Institute for Biotechnology (all rights reserved) but are freely 
+		available for all academic, non-commercial applications. For commercial licensing 
+		information contact Jennifer McCullar (mccullaj@uw.edu)."
+122	CADD_phred_hg19: CADD phred-like score using the hg19 model. This is phred-like rank score 
+		based on whole genome CADD raw scores. Please refer to Kircher et al. (2014) Nature Genetics 
+		46(3):310-5 for details. The larger the score the more likely the SNP has damaging effect. 
+		Please note the following copyright statement for CADD: "CADD scores 
+		(http://cadd.gs.washington.edu/) are Copyright 2013 University of Washington and 
+		Hudson-Alpha Institute for Biotechnology (all rights reserved) but are freely 
+		available for all academic, non-commercial applications. For commercial licensing 
+		information contact Jennifer McCullar (mccullaj@uw.edu)."
+123	DANN_score: DANN is a functional prediction score retrained based on the training data
+		of CADD using deep neural network. Scores range from 0 to 1. A larger number indicate 
+		a higher probability to be damaging. More information of this score can be found in
+		doi: 10.1093/bioinformatics/btu703. 
+127	fathmm-MKL_coding_pred: If a fathmm-MKL_coding_score is >0.5 (or rankscore >0.28317) 
+		the corresponding nsSNV is predicted as "D(AMAGING)"; otherwise it is predicted as "N(EUTRAL)".
+131	fathmm-XF_coding_pred: If a fathmm-XF_coding_score is >0.5, the corresponding nsSNV is predicted
+		as "D(AMAGING)"; otherwise it is predicted as "N(EUTRAL)".
+134	Eigen-phred_coding: Eigen score in phred scale.
+137	Eigen-PC-phred_coding: Eigen PC score in phred scale.
+138	GenoCanyon_score: A functional prediction score based on conservation and biochemical
+		annotations using an unsupervised statistical learning. (doi:10.1038/srep10576)
+140	integrated_fitCons_score: fitCons score predicts the fraction of genomic positions belonging to
+		a specific function class (defined by epigenomic "fingerprint") that are under selective 
+		pressure. Scores range from 0 to 1, with a larger score indicating a higher proportion of 
+		nucleic sites of the functional class the genomic position belong to are under selective 
+		pressure, therefore more likely to be functional important. Integrated (i6) scores are
+		integrated across three cell types (GM12878, H1-hESC and HUVEC). More details can be found
+		in doi:10.1038/ng.3196.
+142	integrated_confidence_value: 0 - highly significant scores (approx. p<.003); 1 - significant scores
+		(approx. p<.05); 2 - informative scores (approx. p<.25); 3 - other scores (approx. p>=.25).
+143	GM12878_fitCons_score: fitCons score predicts the fraction of genomic positions belonging to
+		a specific function class (defined by epigenomic "fingerprint") that are under selective 
+		pressure. Scores range from 0 to 1, with a larger score indicating a higher proportion of 
+		nucleic sites of the functional class the genomic position belong to are under selective 
+		pressure, therefore more likely to be functional important. GM12878 fitCons scores are
+		based on cell type GM12878. More details can be found in doi:10.1038/ng.3196.
+145	GM12878_confidence_value: 0 - highly significant scores (approx. p<.003); 1 - significant scores
+		(approx. p<.05); 2 - informative scores (approx. p<.25); 3 - other scores (approx. p>=.25).
+146	H1-hESC_fitCons_score: fitCons score predicts the fraction of genomic positions belonging to
+		a specific function class (defined by epigenomic "fingerprint") that are under selective 
+		pressure. Scores range from 0 to 1, with a larger score indicating a higher proportion of 
+		nucleic sites of the functional class the genomic position belong to are under selective 
+		pressure, therefore more likely to be functional important. GM12878 fitCons scores are
+		based on cell type H1-hESC. More details can be found in doi:10.1038/ng.3196.
+148	H1-hESC_confidence_value: 0 - highly significant scores (approx. p<.003); 1 - significant scores
+		(approx. p<.05); 2 - informative scores (approx. p<.25); 3 - other scores (approx. p>=.25).
+149	HUVEC_fitCons_score: fitCons score predicts the fraction of genomic positions belonging to
+		a specific function class (defined by epigenomic "fingerprint") that are under selective 
+		pressure. Scores range from 0 to 1, with a larger score indicating a higher proportion of 
+		nucleic sites of the functional class the genomic position belong to are under selective 
+		pressure, therefore more likely to be functional important. GM12878 fitCons scores are
+		based on cell type HUVEC. More details can be found in doi:10.1038/ng.3196.
+151	HUVEC_confidence_value: 0 - highly significant scores (approx. p<.003); 1 - significant scores
+		(approx. p<.05); 2 - informative scores (approx. p<.25); 3 - other scores (approx. p>=.25).
+152	LINSIGHT: "The LINSIGHT score measures the probability of negative selection on noncoding sites"
+		Details refer to doi:10.1038/ng.3810. 
+155	GERP++_RS: GERP++ RS score, the larger the score, the more conserved the site. Scores range from
+		-12.3 to 6.17.
+175	1000Gp3_AF: Alternative allele frequency in the whole 1000Gp3 data.
+177	1000Gp3_AFR_AF: Alternative allele frequency in the 1000Gp3 African descendent samples.
+179	1000Gp3_EUR_AF: Alternative allele frequency in the 1000Gp3 European descendent samples.
+181	1000Gp3_AMR_AF: Alternative allele frequency in the 1000Gp3 American descendent samples.
+183	1000Gp3_EAS_AF: Alternative allele frequency in the 1000Gp3 East Asian descendent samples.
+185	1000Gp3_SAS_AF: Alternative allele frequency in the 1000Gp3 South Asian descendent samples.
+244	gnomAD_exomes_flag: information from gnomAD exome data indicating whether the variant falling within low-complexity
+		(lcr) or segmental duplication (segdup) or decoy regions. The flag can be either "." for high-quality PASS or not 
+		reported/polymorphic in gnomAD exomes, "lcr" for within lcr, "segdup" for within segdup, or "decoy" for
+		with decoy region.
+247	gnomAD_exomes_AF: Alternative allele frequency in the whole gnomAD exome samples (125,748 samples)
+251	gnomAD_exomes_AFR_AF: Alternative allele frequency in the African/African American gnomAD exome samples (8,128 samples)
+255	gnomAD_exomes_AMR_AF: Alternative allele frequency in the Latino gnomAD exome samples (17,296 samples)
+259	gnomAD_exomes_ASJ_AF: Alternative allele frequency in the Ashkenazi Jewish gnomAD exome samples (5,040 samples)
+263	gnomAD_exomes_EAS_AF: Alternative allele frequency in the East Asian gnomAD exome samples (9,197 samples)
+267	gnomAD_exomes_FIN_AF: Alternative allele frequency in the Finnish gnomAD exome samples (10,824 samples)
+271	gnomAD_exomes_NFE_AF: Alternative allele frequency in the Non-Finnish European gnomAD exome samples (56,885 samples)
+275	gnomAD_exomes_SAS_AF: Alternative allele frequency in the South Asian gnomAD exome samples (15,308 samples)
+630	clinvar_id: clinvar variation ID
+631	clinvar_clnsig: clinical significance by clinvar
+		Possible values: Benign, Likely_benign, Likely_pathogenic, Pathogenic, drug_response, 
+		histocompatibility. A negative score means the score is for the ref allele
+632	clinvar_trait: the trait/disease the clinvar_clnsig referring to
+635	clinvar_var_source: source of the variant
