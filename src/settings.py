@@ -1,7 +1,7 @@
 #list_columns = ['HUVEC_confidence_value','H1-hESC_confidence_value','GM12878_confidence_value', 
 #                        'integrated_confidence_value', 'clinvar_id', 'clinvar_source']
 
-list_columns = ['HUVEC_confidence_value','H1-hESC_confidence_value','GM12878_confidence_value',
+list_columns = ['HUVEC_confidence_value','H1hESC_confidence_value','GM12878_confidence_value',
                     'integrated_confidence_value', '1000Gp3_AF','1000Gp3_AFR_AF', '1000Gp3_EUR_AF', '1000Gp3_AMR_AF',
                     '1000Gp3_EAS_AF','1000Gp3_SAS_AF', 'gnomAD_exomes_flag', 'gnomAD_exomes_AF','gnomAD_exomes_AFR_AF', 
                     'gnomAD_exomes_AMR_AF', 'gnomAD_exomes_ASJ_AF','gnomAD_exomes_EAS_AF', 'gnomAD_exomes_FIN_AF', 'gnomAD_exomes_NFE_AF',
