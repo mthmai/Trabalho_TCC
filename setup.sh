@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Pasta com os arquivos comprimidos .gz
-pasta="$HOME/Trabalho_TCC/dbNSFP4.2a"
+pasta="$HOME/Desktop/teste_runn/dbNSFP4.2a"
 start=$(date +%s)
 
 # Loop para descomprimir, cortar e excluir os arquivos

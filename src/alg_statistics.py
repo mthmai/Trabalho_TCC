@@ -2,129 +2,89 @@ import math
 
 import pandas as pd
 
+from table_cleanup import CleanUpTable
 from sklearn.metrics import cohen_kappa_score
 from typing import List, Dict
+from settings import list_columns
 
 
-def drop_colums(list_columns: List[str], table: pd.DataFrame) -> pd.DataFrame:
+class CalculateStaats(CleanUpTable):
+    def __init__(self, dataframe: pd.DataFrame):
+        self.dataframe = dataframe
     
-    return table.drop(columns= list_columns)
+    def _true_positive(self, column_name: str, idx_int) -> int:
+        search_TP = (self.dataframe[(self.dataframe[column_name] == 1) & (self.dataframe[idx_int] == 1)])
 
-def true_positive(table: pd.DataFrame, column_name: str, idx_int: int) -> int:
-
-    search_TP = (table[(table[column_name] == 1) & (table[idx_int] == 1)])
-
-    return len(search_TP.index)
-
-def false_negative(table: pd.DataFrame, column_name: str, idx_int: int) -> int:
-
-    search_FN = (table[(table[column_name] == 1) & (table[idx_int] == 0)])
-
-    return len(search_FN.index)
-
-def pat_no_class(table: pd.DataFrame, column_name: str, idx_int: int) -> int:
-
-    search_pat_no_class = (table[(table[column_name] == 1) & (table[idx_int] == 10000)])
-
-    return len(search_pat_no_class.index)
-
-def false_positive(table: pd.DataFrame, column_name: str, idx_int: int) -> int:
-
-    search_FP = (table[(table[column_name] == 0) & (table[idx_int] == 1)])
-
-    return len(search_FP.index)
-
-def true_negative(table: pd.DataFrame, column_name: str, idx_int: int) -> int:
-
-    search_TN = (table[(table[column_name] == 0) & (table[idx_int] == 0)])
-
-    return len(search_TN.index)
-
-def ben_no_class(table: pd.DataFrame, column_name: str, idx_int: int) -> int:
-
-    search_ben_no_class = (table[(table[column_name] == 0) & (table[idx_int] == 10000)])
-
-    return len(search_ben_no_class.index)
-
-# sensibilidade
-# TP/(TP+FN)
-def calc_sensibility(value_tp: int, value_fn: int) -> int:
-    try:
-        return value_tp / (value_tp + value_fn)
-    except ZeroDivisionError:
-        return None
-
-# especificidade
-# TN/(TN+FP)
-def calc_especificity(value_tn: int, value_fp: int) -> int:
-    try:
-        return value_tn / (value_tn + value_fp)
-    except ZeroDivisionError:
-        return None
-
-# acurácia
-# (TP+TN)/(TP+TN+FN+FP)
-def calc_acuracy(value_tp: int, value_tn: int, value_fn: int, value_fp: int) -> int:
-    try:
-        return (value_tp + value_tn) / (value_tp + value_tn + value_fn + value_fp)
-    except ZeroDivisionError:
-        return None
-
-
-def get_list_TP(dictionary_calc: Dict[str, int]) -> List[int]:
-
-    return dictionary_calc.get('TP')
-
-def get_list_TN(dictionary_calc: Dict[str, int]) -> List[int]:
-
-    return dictionary_calc.get('TN')
-
-def get_list_FP(dictionary_calc: Dict[str, int]) -> List[int]:
-
-    return dictionary_calc.get('FP')
-
-def get_list_FN(dictionary_calc: Dict[str, int]) -> List[int]:
-
-    return dictionary_calc.get('FN')
-
-def teste_kappa(program_column: pd.core.series.Series, standard_column: pd.core.series.Series):
-    col_1 = program_column.tolist()
-    col_2 = standard_column.tolist()
-    col_1_nan = list(filter(lambda x: not math.isnan(x), col_1))
-    col_2_nan = list(filter(lambda x: not math.isnan(x), col_2))
-
-
-    print(col_1_nan, col_2_nan)
+        return len(search_TP.index)
     
-    return cohen_kappa_score(col_1_nan, col_2_nan)
+    def _false_negative(self, column_name: str, idx_int) -> int:
+        search_FN = (self.dataframe[(self.dataframe[column_name] == 1) & (self.dataframe[idx_int] == 0)])
 
-def kappa_to_apply(table: pd.DataFrame, standard_column: str ,dictionary: Dict) -> Dict:
+        return len(search_FN.index)
+    
+    def _pat_no_class(self, column_name: str, idx_int: int) -> int:
+        search_pat_no_class = (self.dataframe[(self.dataframe[column_name] == 1) & (self.dataframe[idx_int] == 10000)])
 
-    table_cut = table.drop(table[table[standard_column] == 10000].index)
-    for idx in table.columns[14:52]:
-        cut_df = table_cut.loc[:,[idx, standard_column]]
-        drop_df = cut_df.drop(cut_df[cut_df[idx] == 10000].index)
-        dictionary['kappa_value'].append(teste_kappa(drop_df[idx], drop_df[standard_column]))    
+        return len(search_pat_no_class.index)
+    
+    def _false_positive(self, column_name: str, idx_int: int) -> int:
+        search_FP = (self.dataframe[(self.dataframe[column_name] == 0) & (self.dataframe[idx_int] == 1)])
+
+        return len(search_FP.index)
+    
+    def _true_negative(self, column_name: str, idx_int: int) -> int:
+        search_TN = (self.dataframe[(self.dataframe[column_name] == 0) & (self.dataframe[idx_int] == 0)])
+
+        return len(search_TN.index)
+    
+    def _ben_no_class(self, column_name: str, idx_int: int) -> int:
+        search_ben_no_class = (self.dataframe[(self.dataframe[column_name] == 0) & (self.dataframe[idx_int] == 10000)])
+
+        return len(search_ben_no_class.index)
+    
+    # sensibilidade
+    # TP/(TP+FN)
+    def calc_sensibility(self, column_name: str, idx_int: int) -> float:
+        value_tp = self._true_positive(column_name, idx_int)
+        value_fn = self._false_negative(column_name, idx_int)
+        try:
+            return value_tp / (value_tp + value_fn)
+        except ZeroDivisionError:
+            return None
+
+    # especificidade
+    # TN/(TN+FP)
+    def calc_especificity(self, column_name: str, idx_int: int) -> float:
+        value_tn = self._true_negative(column_name, idx_int)
+        value_fp = self._false_positive(column_name, idx_int)
+        try:
+            return value_tn / (value_tn + value_fp)
+        except ZeroDivisionError:
+            return None
+
+    # acurácia
+    # (TP+TN)/(TP+TN+FN+FP)
+    def calc_acuracy(self, column_name: str, idx_int: int) -> float:
+        value_tp = self._true_positive(column_name, idx_int)
+        value_tn = self._true_negative(column_name, idx_int)
+        value_fp = self._false_positive(column_name, idx_int)
+        value_fn = self._false_negative(column_name, idx_int)
+        try:
+            return (value_tp + value_tn) / (value_tp + value_tn + value_fn + value_fp)
+        except ZeroDivisionError:
+            return None
         
-    return dictionary
-# teste de kappa
-def kappa_calculation(table: pd.DataFrame) -> List[int]:
-    
-    kappa_list = list()
-    print('TABLE COLUMNS: ', table.columns[14:73])
-    for idx in table.columns[14:55]:
-        df_corte = table.loc[:, [idx, 'clinvar_clnsig']]
-        teste_drop = df_corte[df_corte[idx] == '10000'].index
-        df_corte.drop(teste_drop, inplace=True)
-        cortado = df_corte[idx].tolist()
-        #print(cortado)
-        #print(w)
-        clinvar_corte = df_corte['clinvar_clnsig'].tolist()
-        print(clinvar_corte)
-        kappa_list = cohen_kappa_score(cortado, clinvar_corte)
-        kappa_list.append((kappa_list))
+    def calc_kappa(self, standard_column: str, program_column: str) -> float:
+        #col_1 = program_column.tolist()
+        #col_2 = standard_column.tolist()
+        col_1, col_2 = self._drop_values_to_kappa_score(standard_column, program_column)
+        col_1_nan = list(filter(lambda x: not math.isnan(x), col_1))
+        col_2_nan = list(filter(lambda x: not math.isnan(x), col_2))
 
-
+        #print(standard_column, program_column)
+        #print(col_1_nan, col_2_nan)
+        
+        return cohen_kappa_score(col_1_nan, col_2_nan)
 
 
 """
@@ -146,9 +106,11 @@ def true_positive():
         valores.append([TP, FN, FP, TN])
 """
 
+'''
 if __name__ == '__main__':
     
-    table = pd.read_csv('/home/ubuntu/Área de Trabalho/table_teste_TCC.csv')
+
+    table = pd.read_csv('/home/matheus_mai/Desktop/table_teste_TCC.csv')
     #kappa_calculation(table)
     #list_columns = ['HUVEC_confidence_value','H1-hESC_confidence_value','GM12878_confidence_value','integrated_confidence_value', '1000Gp3_AF','1000Gp3_AFR_AF', '1000Gp3_EUR_AF', '1000Gp3_AMR_AF', '1000Gp3_EAS_AF','1000Gp3_SAS_AF', 'gnomAD_exomes_flag', 'gnomAD_exomes_AF','gnomAD_exomes_AFR_AF', 
     #                'gnomAD_exomes_AMR_AF', 'gnomAD_exomes_ASJ_AF','gnomAD_exomes_EAS_AF', 'gnomAD_exomes_FIN_AF', 'gnomAD_exomes_NFE_AF','gnomAD_exomes_SAS_AF', 'clinvar_id', 'clinvar_trait', 'clinvar_var_source']
@@ -186,4 +148,16 @@ if __name__ == '__main__':
     print(dictionary_statistics['kappa_value'])
     df = pd.DataFrame.from_dict(dictionary_statistics, orient='index').transpose()
     print(df)
-        
+'''
+if __name__ == '__main__':
+    import pandas as pd
+    dataframe = pd.read_csv('/home/matheus_mai/Desktop/table_teste_TCC.csv')
+    dataframe_clean = CalculateStaats(dataframe)._drop_columns(list_columns)
+    dictionary_statistics = {'programs': [], 'sensibility': [], 'especificity': [], 'acuracy': [], 'kappa_value': []}
+    for name_column in dataframe_clean.columns[14:51]:
+        dictionary_statistics['programs'].append(name_column)
+        dictionary_statistics['sensibility'].append(CalculateStaats(dataframe_clean).calc_sensibility('clinvar_clnsig', name_column))
+        dictionary_statistics['especificity'].append(CalculateStaats(dataframe_clean).calc_especificity('clinvar_clnsig', name_column))
+        dictionary_statistics['acuracy'].append(CalculateStaats(dataframe_clean).calc_acuracy('clinvar_clnsig', name_column))
+        dictionary_statistics['sensibility'].append(CalculateStaats(dataframe_clean).calc_sensibility('clinvar_clnsig', name_column))
+        dictionary_statistics['kappa_value'].append(CalculateStaats(dataframe_clean).calc_kappa('clinvar_clnsig', name_column))

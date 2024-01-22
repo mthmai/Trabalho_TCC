@@ -1,13 +1,14 @@
 #!/bin/bash
 
 # Pasta com os arquivos gerados
-
-cd ~/Trabalho_TCC/dbNSFP4.2a/
+start=$(date +%s)
+pasta="/home/matheus_mai/Desktop/teste_runn/dbNSFP4.2a"
+cd $pasta
 mkdir Genes/
-pasta="/home/matheus_mai/Trabalho_TCC/dbNSFP4.2a"
+
 
 # Arquivo contendo os nomes a serem buscados
-arquivo_nomes="/home/matheus_mai/Trabalho_TCC/genes_utilizados.csv"
+arquivo_nomes="/home/matheus_mai/Documents/genes_to_used.csv"
 
 while IFS=$',' read -r chr nome; do
     echo "Procurando por: $nome no arquivo relacionado ao chr $chr"
@@ -31,5 +32,7 @@ while IFS=$',' read -r chr nome; do
         echo "Arquivo não encontrado para o chr $chr"
     fi
 done < "$arquivo_nomes"
-
+end=$(date +%s)
+runtime=$((end-start))
 echo "Processo concluído."
+echo "Tempo total de execução: $runtime segundos."

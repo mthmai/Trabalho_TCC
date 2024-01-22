@@ -1,9 +1,15 @@
 Genes_Avaliados/
 *.tar.gz
 *.ods
-*.csv
 *.txt
 *.xlsx
 *.zip
 *.vcf
 *.Rhistory
+src/__pycache__/
+*.db
+dbNSFP4.2a/
+teste_refactoring/
+log/
+Inutilizaveis/
+Usuais/*.csv
