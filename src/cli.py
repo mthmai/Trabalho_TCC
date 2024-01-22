@@ -2,7 +2,6 @@
 
 import argparse
 import csv
-import logging
 import sys
 import pandas as pd
 import textwrap
@@ -10,13 +9,11 @@ import textwrap
 from datetime import datetime
 
 from alg_statistics import CalculateStaats
-from apply_statistics import ApplyStaats, ApplyStaatsInFiles
+from apply_statistics import ApplyStaats
 from create_db import db, Gene, Alteracao, Classificacao
 from make_log import logger
 from search_database import SearchDataBase
 from table_cleanup import ApplyCleanAndCreateDir
-#logging.basicConfig(level=logging.DEBUG,  # Nível mínimo de log a ser exibido (DEBUG, INFO, WARNING, ERROR, CRITICAL)
-#                    format='%(asctime)s - %(levelname)s - %(message)s')
 
 class CliMethods:
     NAME= 'MissPred'
@@ -75,7 +72,7 @@ class CliMethods:
         self.populate_db.add_argument(
             '-f',
             '--file',
-            help = 'Tabela que deseja popular na database. Ex: ',
+            help = 'Tabela que deseja popular na database. Ex: ABCA4_cleanup.csv',
             required = True,
             type= str,
         )
@@ -89,7 +86,7 @@ class CliMethods:
         self.staats_db.add_argument(
             '-f',
             '--file',
-            help = 'Tabela contendo as mutações para determinado gene que deseja avaliar. Ex: ',
+            help = 'Tabela contendo as mutações para determinado gene que deseja avaliar. Ex: table_example_entry_search.csv',
             required = True,
             type= str,
         )
@@ -104,7 +101,7 @@ class CliMethods:
         self.staats_db.add_argument(
             '-fr',
             '--fileresult',
-            help = 'Caminho para a criação da tabela resultante do algoritmo. Ex: ',
+            help = 'Caminho para a criação da tabela resultante do algoritmo.',
             required = True,
             type= str,
         )
@@ -118,7 +115,7 @@ class CliMethods:
         self.calc_gene.add_argument(
             '-f',
             '--file',
-            help = 'Tabela para determinado gene que deseja avaliar. Ex: ',
+            help = 'Tabela para determinado gene que deseja avaliar. Ex: ABCA4_cleanup.csv',
             required = True,
             type= str,
         )
@@ -126,7 +123,7 @@ class CliMethods:
         self.calc_gene.add_argument(
             '-sf',
             '--savefile',
-            help = 'Tabela para determinado gene que deseja avaliar. Ex: ',
+            help = 'Caminho para salvar a tabela de estatisticas',
             required = True,
             type= str,
         )

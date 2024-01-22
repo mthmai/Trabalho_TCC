@@ -81,8 +81,8 @@ class CalculateStaats(CleanUpTable):
         col_1_nan = list(filter(lambda x: not math.isnan(x), col_1))
         col_2_nan = list(filter(lambda x: not math.isnan(x), col_2))
 
-        print(standard_column, program_column)
-        print(col_1_nan, col_2_nan)
+        #print(standard_column, program_column)
+        #print(col_1_nan, col_2_nan)
         
         return cohen_kappa_score(col_1_nan, col_2_nan)
 
