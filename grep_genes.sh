@@ -2,13 +2,13 @@
 
 # Pasta com os arquivos gerados
 start=$(date +%s)
-pasta="/home/matheus_mai/Trabalho_TCC/dbNSFP4.2a"
+pasta="/home/matheus_mai/Desktop/teste_runn/dbNSFP4.2a"
 cd $pasta
 mkdir Genes/
 
 
 # Arquivo contendo os nomes a serem buscados
-arquivo_nomes="/home/matheus_mai/Trabalho_TCC/genes_utilizados.csv"
+arquivo_nomes="/home/matheus_mai/Documents/genes_to_used.csv"
 
 while IFS=$',' read -r chr nome; do
     echo "Procurando por: $nome no arquivo relacionado ao chr $chr"
